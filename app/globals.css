@@ -1,1 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* Tailwind theme customization */
+@theme {
+  --color-primary: #0075eb;
+  --color-secondary: #e9f4ff;
+}
