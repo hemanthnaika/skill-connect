@@ -1,9 +1,10 @@
 import { about } from "@/assets/images";
+import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
-import Hero from "@/components/home/Hero";
+import Hero from "@/components/Hero";
 import { Button } from "@/components/ui/button";
 import { Categories } from "@/constants";
-import { CircleCheck } from "lucide-react";
+import { ArrowRight, CircleCheck } from "lucide-react";
 import Image from "next/image";
 
 interface FeaturesProps {
@@ -17,7 +18,7 @@ const Features = ({ name }: FeaturesProps) => (
 );
 const Home = () => {
   return (
-    <main>
+    <section>
       <Hero />
       <CustomLayout>
         <h1 className="mt-10 text-2xl font-bold">Top Categories</h1>
@@ -69,7 +70,23 @@ const Home = () => {
           </div>
         </CustomLayout>
       </div>
-    </main>
+
+      <CustomLayout>
+        <div className="flex items-center justify-between mt-10">
+          <h1 className=" text-2xl font-bold">Popular Courses</h1>
+          <span className="flex text-primary text-sm font-medium">
+            Explore more <ArrowRight className="w-5 h-5" />
+          </span>
+        </div>
+        <div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5">
+            {[1, 2, 3, 4].map((cat) => (
+              <CourseCard key={cat} />
+            ))}
+          </div>
+        </div>
+      </CustomLayout>
+    </section>
   );
 };
 

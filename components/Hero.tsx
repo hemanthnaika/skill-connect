@@ -1,6 +1,5 @@
-import React from "react";
 import Image from "next/image";
-import CustomLayout from "../CustomLayout";
+import CustomLayout from "@/components/CustomLayout";
 import { hero } from "@/assets/images";
 
 const Hero = () => {
@@ -148,8 +147,6 @@ const Hero = () => {
             />
           </div>
         </div>
-
-       
       </CustomLayout>
     </section>
   );
