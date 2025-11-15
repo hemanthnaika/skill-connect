@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 SkillConnect
 
-## Getting Started
+### Community Skill-Sharing & Workshop Platform
 
-First, run the development server:
+Teach • Learn • Connect • Grow
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+SkillConnect is a modern web and mobile platform where users can **teach skills**, **learn new skills**, **host workshops**, **join online/offline events**, and **participate in live video classes** — all in one place.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Built using **Next.js** and **shadcn/ui**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Features
 
-## Learn More
+### 👤 User Accounts
 
-To learn more about Next.js, take a look at the following resources:
+- Register as **Learner**, **Teacher**, or **Both**
+- Profile with bio, skills, interests, and rating
+- Upload profile images
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🎓 Workshops
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Create paid or free workshops
+- Workshop dashboard
 
-## Deploy on Vercel
+### 📺 Live Video Classes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Instant join from browser
+- Live chat inside sessions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 💬 Chat System
+
+- Group chat for each workshop
+- Real-time updates (WebSockets)
+
+### 🗂 Discover Skills
+
+- Skill search by category, location, or level
+- Browse teachers & upcoming workshops
+- Interactive map view
+
+### 💰 Payments
+
+- **Paid workshops** with Stripe/Razorpay
+- Booking confirmations
+- Transaction history
+
+### ⭐ Ratings & Feedback
+
+- Rate teachers after classes
+- Review workshops
+- Build trust inside the community
+
+### 🔐 Security
+
+- JWT authentication
+- Role-based access (Admin / Teacher / User)
+- Data protection & safe community guidelines
+
+---
+
+## 🛠 Tech Stack
+
+### **Frontend**
+
+- Next.js 14 (App Router)
+- Tailwind CSS
+- shadcn/ui
+- React Query / Zustand
+
+---

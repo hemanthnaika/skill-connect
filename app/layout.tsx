@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import { Button } from "@/components/ui/button";
 
-const bric = Bricolage_Grotesque({
-  weight: "200",
+import Navbar from "@/layout/navbar";
+import Footer from "@/layout/footer";
+
+const roboto = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
@@ -23,8 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={(bric.className, "light")}>
-      <body>{children}</body>
+    <html lang="en" className={roboto.className}>
+      <body className="relative">
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
