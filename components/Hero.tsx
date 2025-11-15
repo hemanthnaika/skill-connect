@@ -138,7 +138,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 flex justify-end">
             <Image
               width={600}
               className="h-auto rounded-2xl"

@@ -2,6 +2,7 @@ import { about } from "@/assets/images";
 import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
 import Hero from "@/components/Hero";
+import Testimonial from "@/components/Testimonial";
 import { Button } from "@/components/ui/button";
 import { Categories } from "@/constants";
 import { ArrowRight, CircleCheck } from "lucide-react";
@@ -86,6 +87,15 @@ const Home = () => {
           </div>
         </div>
       </CustomLayout>
+
+      <div className="mt-10 bg-primary/10 py-10">
+        <CustomLayout>
+          <h1 className="font-bold text-2xl text-center mb-10">
+            What Learners Say About SkillConnect
+          </h1>
+          <Testimonial />
+        </CustomLayout>
+      </div>
     </section>
   );
 };
