@@ -80,9 +80,9 @@ const Home = () => {
           </span>
         </div>
         <div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5">
-            {[1, 2, 3, 4].map((cat) => (
-              <CourseCard key={cat} />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5 space-y-5">
+            {Array.from({ length: 8 }).map((cat, i) => (
+              <CourseCard key={i} />
             ))}
           </div>
         </div>
