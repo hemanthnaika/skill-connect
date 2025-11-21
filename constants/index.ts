@@ -26,7 +26,7 @@ export const navBar = [
   },
   {
     name: "browse skills",
-    link: "/browse skills",
+    link: "/skills",
   },
 ];
 

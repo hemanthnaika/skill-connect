@@ -5,6 +5,7 @@
 @theme {
   --color-primary: #0075eb;
   --color-secondary: #e9f4ff;
+  --color-gray: #cbd5e1;
 }
 ::-webkit-scrollbar {
   width: 1px;

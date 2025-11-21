@@ -1,51 +1,76 @@
-import { EarIcon, Earth, Star, Users } from "lucide-react";
+import { Earth, Star, Users } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 const CourseCard = () => {
+  // Dynamic Data (you can later pass as props)
+  const category = "Music & Performance";
+  const title = "Live Guitar Masterclass";
+  const sessionType = "Online Session";
+  const price = "Free";
+  const students = 180;
+  const instructorRating = 4.8;
+  const instructorReviews = 112;
+  const isUpcoming = true;
+
   return (
     <div className="flex flex-wrap items-center justify-center gap-8">
-      <div className="max-w-72 w-full hover:-translate-y-0.5 transition duration-300">
+      <div className="max-w-72 w-full hover:-translate-y-0.5 transition duration-300 relative">
+        {/* Thumbnail */}
         <Image
           width={500}
           height={500}
           className="rounded-xl"
           src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=1200&h=800&auto=format&fit=crop&q=60"
-          alt="Skill Workshop"
+          alt={title}
         />
+
+        {/* NEW Badge */}
+        {isUpcoming && (
+          <span className="absolute top-2 left-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded-md">
+            NEW
+          </span>
+        )}
+
+        {/* Category + Rating */}
         <div className="flex items-center mt-2 justify-between">
-          <span className="inline-block text-slate-400">Art & Creativity</span>
-          <div className="flex">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Star
-                key={index}
-                className="fill-amber-400 text-yellow-400 w-3 h-3"
-              />
-            ))}
+          <span className="inline-block text-slate-400">{category}</span>
+
+          <div className="flex items-center gap-1">
+            <Star className="fill-amber-400 text-yellow-400 w-3 h-3" />
+            <span className="text-[13px] font-medium">{instructorRating}</span>
+            <span className="text-[11px] text-slate-400">
+              ({instructorReviews})
+            </span>
           </div>
         </div>
-        <h3 className="text-base text-slate-900 font-medium mt-1">
-          Beginner Drawing Workshop
-        </h3>
+
+        {/* Title */}
+        <h3 className="text-base text-slate-900 font-medium mt-1">{title}</h3>
+
+        {/* Session + Price */}
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <Earth className="w-5 h-5" /> Online Session
+            <Earth className="w-5 h-5" /> {sessionType}
           </span>
-          <p className="text-xl text-indigo-600 font-medium mt-1">Free</p>
+          <p className="text-xl text-indigo-600 font-medium mt-1">{price}</p>
         </div>
+
+        {/* Students + Button */}
         <div className="flex items-center justify-between mt-2">
           <span className="flex items-center gap-2 text-slate-600 text-sm">
-            <Users className="w-4 h-4" /> 120 Students
+            <Users className="w-4 h-4" /> {students} Enrolled Users
           </span>
 
-          {/* Register Button */}
-          <Button
+          <Link
+            href={"/skills/1"}
             type="button"
             className="px-4 py-1.5 rounded-md bg-primary text-white text-sm hover:bg-primary/80 active:scale-95 transition-all"
           >
             Know More
-          </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ const Home = () => {
               >
                 <Icon className="w-8 h-8 mb-2 text-primary" />
 
-                <h2 className="text-xl font-bold text-center">{cat.name}</h2>
+                <span className="text-md font-bold text-center">{cat.name}</span>
               </div>
             );
           })}
