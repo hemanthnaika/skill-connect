@@ -4,7 +4,7 @@ import "./globals.css";
 
 import Navbar from "@/layout/navbar";
 import Footer from "@/layout/footer";
-
+import { Toaster } from "react-hot-toast";
 const roboto = Bricolage_Grotesque({
   subsets: ["latin"],
 });
@@ -26,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.className}>
       <body className="relative ">
+        <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         {children}
         <Footer />

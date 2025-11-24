@@ -65,7 +65,7 @@ const CourseCard = () => {
           </span>
 
           <Link
-            href={"/skills/1"}
+            href={"/workshops/1"}
             type="button"
             className="px-4 py-1.5 rounded-md bg-primary text-white text-sm hover:bg-primary/80 active:scale-95 transition-all"
           >

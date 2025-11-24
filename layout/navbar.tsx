@@ -1,11 +1,28 @@
-import { logo } from "@/assets/images";
+import { logo, profile } from "@/assets/images";
+
 import CustomLayout from "@/components/CustomLayout";
-import { Button } from "@/components/ui/button";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { navBar } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { Button } from "@/components/ui/button";
+import { SignOutAction } from "@/server/users";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <header className="bg-white shadow py-3 ">
       <CustomLayout>
@@ -24,9 +41,41 @@ const Navbar = () => {
               </Link>
             ))}
           </ul>
-          <Button className="bg-primary text-white rounded-full font-medium text-sm px-10 py-5">
-            Sign Up
-          </Button>
+          {session ? (
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="border-0 outline-none">
+                  <Image
+                    src={session.user?.image || profile}
+                    alt="Logo"
+                    height={30}
+                    width={30}
+                    loading="lazy"
+                    className="rounded-full"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-white">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <form action={SignOutAction} className="w-full">
+                      <Button className="w-full bg-red-500 hover:bg-red-500/90 text-white cursor-pointer font-bold">
+                        Logout
+                      </Button>
+                    </form>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            <Link
+              href="/signIn"
+              className="bg-primary text-white rounded-full font-medium text-sm px-10 py-2"
+            >
+              Sign In
+            </Link>
+          )}
         </nav>
       </CustomLayout>
     </header>

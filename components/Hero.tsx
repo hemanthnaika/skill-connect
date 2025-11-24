@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CustomLayout from "@/components/CustomLayout";
 import { hero } from "@/assets/images";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -21,14 +22,16 @@ const Hero = () => {
             </p>
 
             <div className="flex items-center gap-4 mt-6">
-              <button
+              <Link
+                href="/register"
                 className="px-8 py-3 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white active:scale-95 transition-all"
                 type="button"
               >
                 Get Started
-              </button>
+              </Link>
 
-              <button
+              <Link
+                href="/workshops"
                 className="px-5 py-3 rounded-md bg-white text-indigo-600 border border-indigo-400 flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all"
                 type="button"
               >
@@ -71,7 +74,7 @@ const Hero = () => {
                   />
                 </svg>
                 <span>Browse Workshops</span>
-              </button>
+              </Link>
             </div>
 
             <div className="flex items-center mt-9">

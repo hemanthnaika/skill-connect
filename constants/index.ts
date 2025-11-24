@@ -17,16 +17,17 @@ export const navBar = [
     link: "/",
   },
   {
-    name: "About",
+    name: "Workshops",
+    link: "/workshops",
+  },
+
+  {
+    name: "About Us",
     link: "/about",
   },
   {
     name: "Contact",
     link: "/contact",
-  },
-  {
-    name: "browse skills",
-    link: "/skills",
   },
 ];
 
