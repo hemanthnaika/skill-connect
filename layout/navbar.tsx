@@ -57,7 +57,11 @@ const Navbar = async () => {
                 <DropdownMenuContent className="bg-white">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/profile" className="w-full">
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <form action={SignOutAction} className="w-full">
                       <Button className="w-full bg-red-500 hover:bg-red-500/90 text-white cursor-pointer font-bold">

@@ -9,6 +9,9 @@ import {
   BookOpenCheck,
   Sparkles,
   PenLine,
+  User,
+  FileUp,
+  Banknote,
 } from "lucide-react";
 
 export const navBar = [
@@ -104,5 +107,99 @@ export const testimonials = [
       "SkillConnect’s community is amazing — helpful peers, shared resources, and honest reviews. I learned practical skills and found collaborators.",
     name: "Arjun Desai",
     role: "Product Manager",
+  },
+];
+
+export const formStep = [
+  {
+    icon: User,
+    title: "Personal Details",
+    description: "Enter your basic personal information",
+  },
+
+  {
+    icon: FileUp,
+    title: "Document Verification",
+    description: "Upload ID, selfie & skill details",
+  },
+  {
+    icon: Banknote,
+    title: "Bank Details",
+    description: "Enter your bank details to receive payments",
+  },
+];
+
+export type FieldName =
+  | "fullName"
+  | "email"
+  | "phone"
+  | "socialLinks"
+  | "govId"
+  | "selfie"
+  | "category"
+  | "experience"
+  | "upiId";
+
+interface FieldItem {
+  name: FieldName;
+  placeholder: string;
+  type: "text" | "email" | "number" | "file" | "checkbox" | "textarea";
+  accept?: string;
+  options?: { label: string; value: string }[];
+}
+
+export const FormStepData: { step: number; fields: FieldItem[] }[] = [
+  {
+    step: 0,
+    fields: [
+      { name: "fullName", placeholder: "Full Name", type: "text" },
+      { name: "email", placeholder: "Email", type: "email" },
+      { name: "phone", placeholder: "Phone Number", type: "number" },
+      { name: "socialLinks", placeholder: "Social Links", type: "text" },
+      {
+        name: "experience",
+        placeholder: "Explain your experience…",
+        type: "text",
+      },
+      {
+        name: "category",
+        placeholder: "Select Skill Category",
+        type: "checkbox",
+        options: [
+          { label: "Art", value: "art" },
+          { label: "Technology", value: "tech" },
+          { label: "Music", value: "music" },
+          { label: "Dance", value: "dance" },
+          { label: "Career", value: "career" },
+        ],
+      },
+    ],
+  },
+  {
+    step: 1,
+    fields: [
+      {
+        name: "govId",
+        placeholder: "Upload Aadhar/PAN",
+        type: "file",
+        accept: "image/*",
+      },
+      {
+        name: "selfie",
+        placeholder: "Upload a selfie",
+        type: "file",
+        accept: "image/*",
+      },
+    ],
+  },
+  {
+    step: 2,
+    fields: [
+      {
+        name: "upiId",
+        placeholder: "UPI ID (example: yourname@upi)",
+        type: "text",
+      },
+    ],
   },
 ];
