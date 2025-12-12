@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -92,4 +99,21 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const schema = { user, session, account, verification };
+export const workshops = pgTable("workshops", {
+  slug: varchar("slug", { length: 300 }).primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  level: varchar("level", { length: 100 }).notNull(),
+  date: varchar("date", { length: 40 }).notNull(),
+  time: varchar("time", { length: 40 }).notNull(),
+  duration: varchar("duration", { length: 40 }).notNull(),
+  price: varchar("price", { length: 40 }).notNull(),
+  mode: varchar("mode", { length: 20 }).notNull(), // online/offline/both
+  address: text("address"), // nullable
+  thumbnailUrl: text("thumbnail_url").notNull(),
+  isApproved: boolean("is_approved").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const schema = { user, session, account, verification, workshops };

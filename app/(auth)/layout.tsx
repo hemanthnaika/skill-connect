@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
 import Navbar from "@/layout/navbar";
 import Footer from "@/layout/footer";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function UserLayout({
   children,
 }: {
   children: React.ReactNode;

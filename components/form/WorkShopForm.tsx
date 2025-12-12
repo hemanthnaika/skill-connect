@@ -16,7 +16,9 @@ import { Button } from "../ui/button";
 import z from "zod";
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -26,6 +28,7 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
+// Workshop schema
 const workshopSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(20, "Description must be at least 20 characters"),
@@ -35,6 +38,10 @@ const workshopSchema = z.object({
   time: z.string().min(1, "Select time"),
   duration: z.string().min(1, "Enter duration"),
   price: z.string().min(1, "Enter price"),
+  mode: z.enum(["online", "offline", "both"], {
+    message: "Select workshop mode",
+  }),
+  address: z.string().optional(), // will validate conditionally
   thumbnail: z
     .instanceof(File, { message: "Upload a valid image" })
     .refine((file) => file.size <= MAX_FILE_SIZE, "Max size is 5MB")
@@ -44,7 +51,18 @@ const workshopSchema = z.object({
     ),
 });
 
-type WorkShopType = z.infer<typeof workshopSchema>;
+// refine address when offline or both
+const WorkshopSchemaWithRefine = workshopSchema.superRefine((data, ctx) => {
+  if ((data.mode === "offline" || data.mode === "both") && !data.address) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Address is required for offline or both mode",
+      path: ["address"],
+    });
+  }
+});
+
+type WorkShopType = z.infer<typeof WorkshopSchemaWithRefine>;
 
 interface FiledInputProps {
   title: string;
@@ -74,6 +92,7 @@ interface OptionType {
   label: string;
   value: string;
 }
+
 interface FiledSelectProps {
   title: string;
   placeholder: string;
@@ -86,18 +105,17 @@ interface FiledSelectProps {
 const FiledSelect = ({
   title,
   placeholder,
-
   options,
   onChange,
   error,
 }: FiledSelectProps) => (
-  <div className="space-y-2 w-full">
+  <div className="space-y-2 w-full ">
     <Label>{title}</Label>
     <Select onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-white shadow">
         {options.map((o) => (
           <SelectItem value={o.value} key={o.value}>
             {o.label}
@@ -111,21 +129,60 @@ const FiledSelect = ({
 
 const WorkShopForm = () => {
   const [preview, setPreview] = useState<string | null>(null);
+  const [mode, setMode] = useState<string>("online");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<WorkShopType>({
-    resolver: zodResolver(workshopSchema),
+    resolver: zodResolver(WorkshopSchemaWithRefine),
     mode: "onChange",
     reValidateMode: "onChange",
   });
 
-  const onSubmit = (data: WorkShopType) => {
-    console.log("WORKSHOP DATA:", data);
-    alert("Workshop created successfully!");
+  const handleFileSelect = (file: File) => {
+    setValue("thumbnail", file, { shouldValidate: true });
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const onSubmit = async (data: WorkShopType) => {
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value as string);
+        }
+      });
+
+      const res = await fetch("/api/workshops", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        toast.error(result.message || "Something went wrong!");
+      } else {
+        toast.success(result.message);
+        reset();
+        setPreview(null);
+        setMode("online");
+      }
+    } catch (error) {
+      const err = error instanceof Error ? error.message : null;
+      toast.error(err || "Something went wrong!");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -225,43 +282,100 @@ const WorkShopForm = () => {
           />
         </div>
 
-        <div className="space-y-2 w-1/2">
-          <Label>Workshop Thumbnail</Label>
+        {/* ► WORKSHOP MODE */}
+        <FiledSelect
+          title="Workshop Mode"
+          placeholder="Choose mode"
+          name="mode"
+          options={[
+            { label: "Online", value: "online" },
+            { label: "Offline", value: "offline" },
+            { label: "Both", value: "both" },
+          ]}
+          onChange={(v) => {
+            setMode(v);
+            setValue("mode", v as WorkShopType["mode"], {
+              shouldValidate: true,
+            });
+          }}
+          error={errors.mode?.message}
+        />
 
+        {/* ► ADDRESS (only offline / both) */}
+        {(mode === "offline" || mode === "both") && (
+          <div className="space-y-2">
+            <Label>Offline Address</Label>
+            <Textarea
+              placeholder="Enter location address"
+              {...register("address")}
+            />
+            {errors.address && (
+              <p className="text-red-500 text-xs">{errors.address.message}</p>
+            )}
+          </div>
+        )}
+
+        {/* IMAGE UPLOAD WITH DRAG & DROP */}
+        <div
+          className={`border-2 border-dashed rounded-md p-5 w-1/2 flex flex-col items-center justify-center cursor-pointer ${
+            isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
+          }`}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileSelect(file);
+          }}
+        >
+          <p className="text-gray-500 text-sm">
+            Drag & drop your thumbnail here, or click to select
+          </p>
           <Input
             type="file"
             accept="image/*"
+            className="hidden"
+            ref={fileInputRef}
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) {
-                setValue("thumbnail", file, { shouldValidate: true });
-                // preview
-                setPreview(URL.createObjectURL(file));
-              }
+              if (file) handleFileSelect(file);
             }}
           />
-
-          {errors.thumbnail && (
-            <p className="text-red-500 text-xs">{errors.thumbnail.message}</p>
-          )}
-        </div>
-
-        {/* PREVIEW */}
-        {preview && (
-          <div className="space-y-2">
-            <Label>Thumbnail Preview</Label>
+          {preview && (
             <Image
               src={preview}
               alt="Workshop Thumbnail"
               width={200}
               height={200}
-              className="rounded-md object-cover"
+              className="mt-3 rounded-md object-cover"
             />
-          </div>
-        )}
+          )}
+          {errors.thumbnail && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.thumbnail.message}
+            </p>
+          )}
+        </div>
 
         <div className="flex items-center justify-center">
-          <Button className="bg-primary text-white">Submit</Button>
+          <Button className="bg-primary text-white" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                Submitting...
+                <Loader className="animate-spin mr-2" />
+              </span>
+            ) : (
+              "Submit"
+            )}
+          </Button>
         </div>
       </form>
     </div>
