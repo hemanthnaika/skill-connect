@@ -2,6 +2,7 @@ import { about, profile } from "@/assets/images";
 import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
 import { Button } from "@/components/ui/button";
+import { serverFetch } from "@/lib/server-fetch";
 import {
   ChevronRight,
   Globe,
@@ -15,6 +16,7 @@ import {
   Layers,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 interface InfoProps {
@@ -29,27 +31,12 @@ const Info = ({ icon, info }: InfoProps) => (
   </div>
 );
 
-const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
+const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
 
-  const offlineAddress =
-    "SkillConnect Creative Hub, 3rd Floor, MG Road, Bengaluru, India";
-
-  const workshopDetails = {
-    workshopMode: "Offline",
-    title: "Live Beginner Guitar Workshop",
-    category: "Music & Performance",
-    instructor: "Alex Johnson",
-    role: "Skill Mentor (Guitar Expert)",
-    rating: "4.9",
-    participants: "350 Participants",
-    language: "English",
-    price: "1499",
-    date: "25 Nov 2025",
-    duration: "2 Hours",
-    level: "Beginner Friendly",
-    contact: "support@skillconnect.com",
-  };
+  const { workshop, relatedWorkshops } = await serverFetch<WorkshopResponse>({
+    url: `workshop/${slug}`,
+  });
 
   return (
     <section>
@@ -61,20 +48,20 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
               <Home className="text-primary w-5 h-5" />
             </button>
             <ChevronRight className="text-gray" />
-            <a href="#">{workshopDetails.category}</a>
+            <Link href="#">{workshop.category}</Link>
             <ChevronRight className="text-gray" />
-            <a href="#">{workshopDetails.title}</a>
+            <Link href="#">{workshop.title}</Link>
           </div>
 
           <div className="flex flex-col-reverse md:flex-row gap-5 mt-5 w-full">
             <div className="w-full">
               {/* Title */}
               <h1 className="text-3xl tracking-wider font-semibold">
-                {workshopDetails.title}
+                {workshop.title}
               </h1>
 
               <span className="font-medium text-slate-600">
-                {workshopDetails.category}
+                {workshop.category}
               </span>
 
               {/* Instructor */}
@@ -87,9 +74,9 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
                   className="rounded-full"
                 />
                 <div>
-                  <h2 className="font-bold">{workshopDetails.instructor}</h2>
+                  {/* <h2 className="font-bold">{workshop.instructor}</h2> */}
                   <span className="text-slate-500 text-sm font-medium">
-                    {workshopDetails.role}
+                    {/* {workshop.role} */}
                   </span>
                 </div>
               </div>
@@ -98,19 +85,19 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
               <div className="flex  items-center justify-between bg-white px-5 py-3 rounded-lg mt-5">
                 <Info
                   icon={<Star className="text-yellow-500 w-5 h-5" />}
-                  info={workshopDetails.rating}
+                  info={10}
                 />
                 <Info
                   icon={<GraduationCap className="text-black w-5 h-5" />}
-                  info={workshopDetails.participants}
+                  info={20}
                 />
                 <Info
                   icon={<Globe className="text-black w-5 h-5" />}
-                  info={workshopDetails.language}
+                  info={"English"}
                 />
                 <Info
                   icon={<IndianRupee className="text-black w-5 h-5" />}
-                  info={workshopDetails.price}
+                  info={workshop.price}
                 />
               </div>
 
@@ -118,40 +105,36 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
               <div className="bg-white mt-5 p-5 rounded-xl space-y-3">
                 <div className="flex items-center gap-3">
                   <CalendarDays className="w-5 h-5 text-primary" />
-                  <span className="font-semibold">
-                    Date: {workshopDetails.date}
-                  </span>
+                  <span className="font-semibold">Date: {workshop.date}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Clock className="w-5 h-5 text-primary" />
                   <span className="font-semibold">
-                    Duration: {workshopDetails.duration}
+                    Duration: {workshop.duration}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Layers className="w-5 h-5 text-primary" />
-                  <span className="font-semibold">
-                    Level: {workshopDetails.level}
-                  </span>
+                  <span className="font-semibold">Level: {workshop.level}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Globe className="w-5 h-5 text-primary" />
                   <span className="font-semibold">
                     Mode:{" "}
-                    {workshopDetails.workshopMode === "Online"
+                    {workshop.mode === "online"
                       ? "Online (Google Meet / Zoom)"
                       : "Offline Event"}
                   </span>
                 </div>
 
-                {workshopDetails.workshopMode === "Offline" && (
+                {workshop.mode === "offline" && (
                   <div className="flex items-start gap-3">
                     <MapPin className="w-5 h-5 text-primary mt-1" />
                     <span className="font-semibold leading-tight">
-                      Address: <br /> {offlineAddress}
+                      Address: <br /> {workshop.address}
                     </span>
                   </div>
                 )}
@@ -166,7 +149,7 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
             {/* Right Image */}
             <div className="w-full flex h-1/2">
               <Image
-                src={about}
+                src={workshop.thumbnailUrl}
                 alt="Workshop Image"
                 width={500}
                 height={500}
@@ -177,14 +160,7 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="bg-white mt-5 p-5 rounded-xl">
             <h3 className="text-lg font-semibold mb-2">Description</h3>
             <p className="text-slate-600 leading-relaxed text-sm">
-              Join our{" "}
-              <span className="font-semibold">Beginner Guitar Workshop</span>{" "}
-              designed especially for new learners who want to start their
-              musical journey. In this interactive session, you will learn
-              essential guitar techniques, basic chords, strumming patterns, and
-              tips to improve your hand coordination. Our expert instructor will
-              guide you step-by-step and help you build a strong foundation in a
-              friendly and supportive environment. No prior experience required!
+              {workshop.description}
             </p>
           </div>
         </CustomLayout>
@@ -194,11 +170,9 @@ const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
 
         <h3 className="text-lg font-semibold mb-3 mt-5">Related Courses</h3>
         <div className="flex flex-wrap gap-5 w-full justify-center">
-          <CourseCard />
-          <CourseCard />
-          <CourseCard />
-          <CourseCard />
-          <CourseCard />
+          {relatedWorkshops.map((workshop) => (
+            <CourseCard key={workshop.id} workshop={workshop} />
+          ))}
         </div>
       </CustomLayout>
     </section>

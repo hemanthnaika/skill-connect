@@ -1,20 +1,18 @@
 import { Earth, Star, Users } from "lucide-react";
 import Image from "next/image";
-import React from "react";
-import { Button } from "./ui/button";
 import Link from "next/link";
 
-const CourseCard = () => {
-  // Dynamic Data (you can later pass as props)
-  const category = "Music & Performance";
+type CourseCardProps = {
+  workshop: Workshop;
+};
+const CourseCard = ({ workshop }: CourseCardProps) => {
   const title = "Live Guitar Masterclass";
-  const sessionType = "Online Session";
-  const price = "Free";
+
   const students = 180;
   const instructorRating = 4.8;
   const instructorReviews = 112;
   const isUpcoming = true;
-
+  console.log(workshop);
   return (
     <div className="flex flex-wrap items-center justify-center gap-8">
       <div className="max-w-72 w-full hover:-translate-y-0.5 transition duration-300 relative">
@@ -22,8 +20,8 @@ const CourseCard = () => {
         <Image
           width={500}
           height={500}
-          className="rounded-xl"
-          src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=1200&h=800&auto=format&fit=crop&q=60"
+          className="rounded-xl w-full h-52 object-cover"
+          src={workshop.thumbnailUrl}
           alt={title}
         />
 
@@ -36,7 +34,9 @@ const CourseCard = () => {
 
         {/* Category + Rating */}
         <div className="flex items-center mt-2 justify-between">
-          <span className="inline-block text-slate-400">{category}</span>
+          <span className="inline-block text-slate-400 capitalize">
+            {workshop.category}
+          </span>
 
           <div className="flex items-center gap-1">
             <Star className="fill-amber-400 text-yellow-400 w-3 h-3" />
@@ -48,14 +48,18 @@ const CourseCard = () => {
         </div>
 
         {/* Title */}
-        <h3 className="text-base text-slate-900 font-medium mt-1">{title}</h3>
+        <h3 className="text-base text-slate-900 font-medium mt-1 capitalize">
+          {workshop.title}
+        </h3>
 
         {/* Session + Price */}
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <Earth className="w-5 h-5" /> {sessionType}
+            <Earth className="w-5 h-5" /> {workshop.mode}
           </span>
-          <p className="text-xl text-indigo-600 font-medium mt-1">{price}</p>
+          <p className="text-xl text-indigo-600 font-medium mt-1">
+            ₹ {workshop.price}
+          </p>
         </div>
 
         {/* Students + Button */}
@@ -65,8 +69,7 @@ const CourseCard = () => {
           </span>
 
           <Link
-            href={"/workshops/1"}
-            type="button"
+            href={`/workshops/${workshop.slug}`}
             className="px-4 py-1.5 rounded-md bg-primary text-white text-sm hover:bg-primary/80 active:scale-95 transition-all"
           >
             Know More

@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       "images.pexels.com",
       "lh3.googleusercontent.com",
       "images.remotePatterns",
+      "res.cloudinary.com",
     ],
   },
 };

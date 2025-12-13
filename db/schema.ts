@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
+
 import {
+  uuid,
   pgTable,
   text,
   timestamp,
@@ -80,9 +82,31 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
+export const workshops = pgTable("workshops", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  slug: varchar("slug", { length: 300 }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  category: varchar("category", { length: 100 }).notNull(),
+  level: varchar("level", { length: 100 }).notNull(),
+  date: varchar("date", { length: 40 }).notNull(),
+  time: varchar("time", { length: 40 }).notNull(),
+  duration: varchar("duration", { length: 40 }).notNull(),
+  price: varchar("price", { length: 40 }).notNull(),
+  mode: varchar("mode", { length: 20 }).notNull(), // online/offline/both
+  address: text("address"), // nullable
+  thumbnailUrl: text("thumbnail_url").notNull(),
+  isApproved: boolean("is_approved").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  workshops: many(workshops),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -99,21 +123,11 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const workshops = pgTable("workshops", {
-  slug: varchar("slug", { length: 300 }).primaryKey(),
-  title: varchar("title", { length: 255 }).notNull(),
-  description: text("description").notNull(),
-  category: varchar("category", { length: 100 }).notNull(),
-  level: varchar("level", { length: 100 }).notNull(),
-  date: varchar("date", { length: 40 }).notNull(),
-  time: varchar("time", { length: 40 }).notNull(),
-  duration: varchar("duration", { length: 40 }).notNull(),
-  price: varchar("price", { length: 40 }).notNull(),
-  mode: varchar("mode", { length: 20 }).notNull(), // online/offline/both
-  address: text("address"), // nullable
-  thumbnailUrl: text("thumbnail_url").notNull(),
-  isApproved: boolean("is_approved").default(false).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const workshopRelations = relations(workshops, ({ one }) => ({
+  author: one(user, {
+    fields: [workshops.createdBy],
+    references: [user.id],
+  }),
+}));
 
 export const schema = { user, session, account, verification, workshops };

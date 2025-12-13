@@ -1,12 +1,18 @@
 import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ChevronRight, Filter, Home, ListFilter, Star } from "lucide-react";
+import { ChevronRight, Home, ListFilter, Star } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { Categories } from "@/constants";
+import { serverFetch } from "@/lib/server-fetch";
 
-const Skills = () => {
+const Skills = async () => {
+  const res = await serverFetch<Workshops>({
+    url: "workshops",
+    revalidate: 60, // ISR
+  });
+
   return (
     <section className="bg-slate-50">
       <CustomLayout>
@@ -94,8 +100,8 @@ const Skills = () => {
 
           <div className="col-span-3 overflow-y-auto pr-2">
             <div className="grid grid-cols-3 gap-5">
-              {Array.from({ length: 20 }).map((item, i) => (
-                <CourseCard key={i} />
+              {res.workshops.map((workshop) => (
+                <CourseCard key={workshop.id} workshop={workshop} />
               ))}
             </div>
           </div>

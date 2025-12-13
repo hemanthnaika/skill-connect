@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -128,6 +129,8 @@ const FiledSelect = ({
 );
 
 const WorkShopForm = () => {
+  const { data: session } = authClient.useSession();
+
   const [preview, setPreview] = useState<string | null>(null);
   const [mode, setMode] = useState<string>("online");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -162,6 +165,10 @@ const WorkShopForm = () => {
         }
       });
 
+      // append logged-in user id
+      if (data) {
+        formData.append("createdBy", session?.user.id as string);
+      }
       const res = await fetch("/api/workshops", {
         method: "POST",
         body: formData,
@@ -175,7 +182,7 @@ const WorkShopForm = () => {
         toast.success(result.message);
         reset();
         setPreview(null);
-        setMode("online");
+        setMode("");
       }
     } catch (error) {
       const err = error instanceof Error ? error.message : null;

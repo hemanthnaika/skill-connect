@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import Testimonial from "@/components/Testimonial";
 import { Button } from "@/components/ui/button";
 import { Categories } from "@/constants";
+import { serverFetch } from "@/lib/server-fetch";
 import { ArrowRight, CircleCheck } from "lucide-react";
 import Image from "next/image";
 
@@ -17,7 +18,13 @@ const Features = ({ name }: FeaturesProps) => (
     <span className="text-lg font-bold">{name}</span>
   </div>
 );
-const Home = () => {
+const Home = async () => {
+  const res = await serverFetch<Workshops>({
+    url: "workshops",
+    revalidate: 60, // ISR
+  });
+
+  console.log(res.workshops);
   return (
     <section>
       <Hero />
@@ -33,7 +40,9 @@ const Home = () => {
               >
                 <Icon className="w-8 h-8 mb-2 text-primary" />
 
-                <span className="text-md font-bold text-center">{cat.name}</span>
+                <span className="text-md font-bold text-center">
+                  {cat.name}
+                </span>
               </div>
             );
           })}
@@ -81,9 +90,9 @@ const Home = () => {
         </div>
         <div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5 space-y-5">
-            {Array.from({ length: 8 }).map((cat, i) => (
-              <CourseCard key={i} />
-            ))}
+            {res.workshops.map((workshop)=>(
+            <CourseCard key={workshop.id} workshop={workshop} />
+           ))}
           </div>
         </div>
       </CustomLayout>

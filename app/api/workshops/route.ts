@@ -82,6 +82,7 @@ export async function POST(req: Request) {
       mode: form.get("mode") as string,
       address: (form.get("address") as string) || null,
       thumbnailUrl: upload.secure_url,
+      createdBy: form.get("createdBy") as string,
     };
 
     // Insert into DB
