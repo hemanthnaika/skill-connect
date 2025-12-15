@@ -1,12 +1,13 @@
 import { relations } from "drizzle-orm";
 
 import {
-  uuid,
+  boolean,
+  index,
+  integer,
   pgTable,
   text,
   timestamp,
-  boolean,
-  index,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -101,6 +102,19 @@ export const workshops = pgTable("workshops", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   isApproved: boolean("is_approved").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const registrations = pgTable("registrations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  workshopId: uuid("workshop_id") // <-- change from text to uuid
+    .notNull()
+    .references(() => workshops.id, { onDelete: "cascade" }),
+  paymentStatus: text("payment_status").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  amountPaid: integer("amount_paid").default(0).notNull(),
 });
 
 export const userRelations = relations(user, ({ many }) => ({

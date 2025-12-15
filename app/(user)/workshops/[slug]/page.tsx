@@ -1,20 +1,23 @@
-import { about, profile } from "@/assets/images";
+import { profile } from "@/assets/images";
 import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
+import RegisterButton from "@/components/RegisterButton";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import { serverFetch } from "@/lib/server-fetch";
 import {
+  CalendarDays,
   ChevronRight,
+  Clock,
   Globe,
   GraduationCap,
-  IndianRupee,
-  Star,
   Home,
-  MapPin,
-  CalendarDays,
-  Clock,
+  IndianRupee,
   Layers,
+  MapPin,
+  Star,
 } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -37,7 +40,9 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { workshop, relatedWorkshops } = await serverFetch<WorkshopResponse>({
     url: `workshop/${slug}`,
   });
-
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   return (
     <section>
       <div className="bg-secondary py-5">
@@ -141,9 +146,20 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
               </div>
 
               {/* Button */}
-              <Button variant="default" className="mt-5 text-white">
-                Register Now
-              </Button>
+              {session?.user ? (
+                <RegisterButton
+                  userId={session.user.id}
+                  slug={workshop.slug}
+                  price={workshop.price}
+                  workshopId={workshop.id}
+                />
+              ) : (
+                <Link href={"/login"}>
+                  <Button variant="default" className="mt-5 text-white">
+                    Register Now
+                  </Button>
+                </Link>
+              )}
             </div>
 
             {/* Right Image */}

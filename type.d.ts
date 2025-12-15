@@ -12,7 +12,7 @@ interface Workshop {
   date: string;
   time: string;
   duration: string;
-  price: string;
+  price: number;
   mode: string;
   address: null;
   thumbnailUrl: string;
