@@ -4,13 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: [
-      "raw.githubusercontent.com",
-      "prebuiltui.com",
-      "images.unsplash.com",
-      "images.pexels.com",
-      "lh3.googleusercontent.com",
-      "images.remotePatterns",
+      "picsum.photos",
       "res.cloudinary.com",
+      "lh3.googleusercontent.com",
+      "images.unsplash.com",
+      "source.unsplash.com",
+      "source.unsplash.com",
     ],
   },
 };

@@ -15,6 +15,8 @@ interface Workshop {
   price: number;
   mode: string;
   address: null;
+  language: string;
+  studentsCount: number;
   thumbnailUrl: string;
   isApproved: boolean;
   createdAt: string;
@@ -23,4 +25,17 @@ interface Workshop {
 interface WorkshopResponse {
   workshop: Workshop;
   relatedWorkshops: Workshop[];
+}
+
+interface ProfileResponse {
+  conductedWorkshops: Workshop[];
+  joinedWorkshops: JoinedWorkshop[];
+}
+
+interface JoinedWorkshop extends Workshop {
+  registrationId: string;
+  paymentStatus: string;
+  amountPaid: number;
+  joinedAt: string;
+  workshopId: string;
 }

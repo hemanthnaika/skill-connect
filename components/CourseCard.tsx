@@ -8,11 +8,10 @@ type CourseCardProps = {
 const CourseCard = ({ workshop }: CourseCardProps) => {
   const title = "Live Guitar Masterclass";
 
-  const students = 180;
   const instructorRating = 4.8;
   const instructorReviews = 112;
   const isUpcoming = true;
-  console.log(workshop);
+
   return (
     <div className="flex flex-wrap items-center justify-center gap-8">
       <div className="max-w-72 w-full hover:-translate-y-0.5 transition duration-300 relative">
@@ -65,7 +64,8 @@ const CourseCard = ({ workshop }: CourseCardProps) => {
         {/* Students + Button */}
         <div className="flex items-center justify-between mt-2">
           <span className="flex items-center gap-2 text-slate-600 text-sm">
-            <Users className="w-4 h-4" /> {students} Enrolled Users
+            <Users className="w-4 h-4" /> {workshop.studentsCount} Enrolled
+            Users
           </span>
 
           <Link

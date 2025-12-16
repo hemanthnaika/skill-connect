@@ -12,14 +12,14 @@ export async function serverFetch<T>({
   url,
   method = "GET",
   body,
-  cache = "no-store",
+
   revalidate,
 }: ServerFetchOptions): Promise<T> {
   const requestHeaders = await headers();
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/${url}`, {
     method,
-    cache,
+
     next: revalidate ? { revalidate } : undefined,
     headers: {
       "Content-Type": "application/json",

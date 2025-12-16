@@ -1,6 +1,8 @@
 import { profile } from "@/assets/images";
+import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
 import { auth } from "@/lib/auth";
+import { serverFetch } from "@/lib/server-fetch";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,10 +14,15 @@ const Profile = async () => {
   });
 
   if (!session) return redirect("/signIn");
+  // http://localhost:3000/api/users/L3USi2X66cZpFhIBegzYX3zctsqXJ1cp/profile
+  const res = await serverFetch<ProfileResponse>({
+    url: `users/${session.user?.id}/profile`,
+  });
+
   return (
     <section>
       <CustomLayout>
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white ">
+        <div className=" mt-10  bg-white ">
           {/* Header Section */}
           <div className="flex items-center gap-4">
             <Image
@@ -47,33 +54,10 @@ const Profile = async () => {
             <h2 className="text-xl font-semibold mb-3">
               Workshops You Created
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Workshop Card */}
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="font-bold">Web Development Bootcamp</h3>
-                <p className="text-sm text-gray-600">Category: Programming</p>
-                <p className="text-sm text-gray-500">Mode: Online</p>
-
-                <Link
-                  href="#"
-                  className="text-blue-600 text-sm mt-2 inline-block"
-                >
-                  View Workshop →
-                </Link>
-              </div>
-
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="font-bold">Digital Marketing Workshop</h3>
-                <p className="text-sm text-gray-600">Category: Marketing</p>
-                <p className="text-sm text-gray-500">Mode: Offline (Delhi)</p>
-
-                <Link
-                  href="#"
-                  className="text-blue-600 text-sm mt-2 inline-block"
-                >
-                  View Workshop →
-                </Link>
-              </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
+              {res.conductedWorkshops.map((workshop, i) => (
+                <CourseCard key={i} workshop={workshop} />
+              ))}
             </div>
           </div>
 
@@ -83,20 +67,14 @@ const Profile = async () => {
               Workshops You Registered For
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           
               {/* Registered Card */}
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="font-bold">UI/UX Design Course</h3>
-                <p className="text-sm text-gray-600">Category: Design</p>
-
-                <Link
-                  href="#"
-                  className="text-blue-600 text-sm mt-2 inline-block"
-                >
-                  View Details →
-                </Link>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
+                {res.joinedWorkshops.map((workshop, i) => (
+                  <CourseCard key={i} workshop={workshop} />
+                ))}
               </div>
-            </div>
+            
           </div>
         </div>
       </CustomLayout>

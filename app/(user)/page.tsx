@@ -6,6 +6,7 @@ import Testimonial from "@/components/Testimonial";
 import { Button } from "@/components/ui/button";
 import { Categories } from "@/constants";
 import { serverFetch } from "@/lib/server-fetch";
+import { console } from "inspector";
 import { ArrowRight, CircleCheck } from "lucide-react";
 import Image from "next/image";
 
@@ -24,7 +25,8 @@ const Home = async () => {
     revalidate: 60, // ISR
   });
 
-  console.log(res.workshops);
+
+
   return (
     <section>
       <Hero />

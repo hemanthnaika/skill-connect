@@ -4,6 +4,7 @@ import {
   boolean,
   index,
   integer,
+  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -83,6 +84,18 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
+export const workshopModeEnum = pgEnum("workshop_mode", [
+  "online",
+  "offline",
+  "both",
+]);
+
+export const courseStatusEnum = pgEnum("course_status", [
+  "pending", // newly created
+  "approved", // admin approved
+  "rejected", // admin rejected
+]);
+
 export const workshops = pgTable("workshops", {
   id: uuid("id").defaultRandom().primaryKey(),
   slug: varchar("slug", { length: 300 }),
@@ -92,15 +105,17 @@ export const workshops = pgTable("workshops", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   category: varchar("category", { length: 100 }).notNull(),
+  language: varchar("language", { length: 100 }).notNull(),
   level: varchar("level", { length: 100 }).notNull(),
   date: varchar("date", { length: 40 }).notNull(),
   time: varchar("time", { length: 40 }).notNull(),
   duration: varchar("duration", { length: 40 }).notNull(),
   price: varchar("price", { length: 40 }).notNull(),
-  mode: varchar("mode", { length: 20 }).notNull(), // online/offline/both
+  mode: workshopModeEnum("mode").notNull(),
   address: text("address"), // nullable
   thumbnailUrl: text("thumbnail_url").notNull(),
-  isApproved: boolean("is_approved").default(false).notNull(),
+  status: courseStatusEnum("status").default("pending").notNull(),
+  rejectionReason: text("rejection_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

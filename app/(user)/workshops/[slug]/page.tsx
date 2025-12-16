@@ -43,6 +43,7 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
   return (
     <section>
       <div className="bg-secondary py-5">
@@ -94,11 +95,11 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 />
                 <Info
                   icon={<GraduationCap className="text-black w-5 h-5" />}
-                  info={20}
+                  info={workshop.studentsCount}
                 />
                 <Info
                   icon={<Globe className="text-black w-5 h-5" />}
-                  info={"English"}
+                  info={workshop.language}
                 />
                 <Info
                   icon={<IndianRupee className="text-black w-5 h-5" />}

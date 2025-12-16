@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import cloudinary from "@/lib/cloudinary";
 import { db } from "@/db/drizzle";
-import { workshops } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { registrations, workshops } from "@/db/schema";
+import cloudinary from "@/lib/cloudinary";
+import { eq, sql } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 // Cloudinary upload result type
 interface CloudinaryUploadResult {
@@ -72,6 +72,7 @@ export async function POST(req: Request) {
     const data = {
       slug, // slug as primary key
       title,
+      language: form.get("language") as string,
       description: form.get("description") as string,
       category: form.get("category") as string,
       level: form.get("level") as string,
@@ -79,7 +80,7 @@ export async function POST(req: Request) {
       time: form.get("time") as string,
       duration: form.get("duration") as string,
       price: form.get("price") as string,
-      mode: form.get("mode") as string,
+      mode: form.get("mode") as "online" | "offline" | "both",
       address: (form.get("address") as string) || null,
       thumbnailUrl: upload.secure_url,
       createdBy: form.get("createdBy") as string,
@@ -97,13 +98,34 @@ export async function POST(req: Request) {
     );
   }
 }
-
 export async function GET() {
   try {
-    const approvedWorkshops = await db.query.workshops.findMany({
-      where: eq(workshops.isApproved, true), // only approved
-      orderBy: workshops.date, // optional: order by date
-    });
+    const approvedWorkshops = await db
+      .select({
+        id: workshops.id,
+        slug: workshops.slug,
+        title: workshops.title,
+        category: workshops.category,
+        level: workshops.level,
+        date: workshops.date,
+        price: workshops.price,
+        thumbnailUrl: workshops.thumbnailUrl,
+
+        // ✅ count ONLY paid students
+        studentsCount: sql<number>`
+          COUNT(
+            CASE
+              WHEN ${registrations.paymentStatus} = 'paid'
+              THEN 1
+            END
+          )
+        `.as("studentsCount"),
+      })
+      .from(workshops)
+      .leftJoin(registrations, eq(registrations.workshopId, workshops.id))
+      .where(eq(workshops.status, "approved"))
+      .groupBy(workshops.id)
+      .orderBy(workshops.date);
 
     return NextResponse.json({ workshops: approvedWorkshops });
   } catch (error) {
