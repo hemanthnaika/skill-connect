@@ -52,7 +52,7 @@ const SignUpForm = () => {
       setLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/profile",
       });
 
       return {

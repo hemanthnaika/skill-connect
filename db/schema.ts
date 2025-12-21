@@ -12,12 +12,15 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  role: userRoleEnum("role").default("user").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -132,6 +135,33 @@ export const registrations = pgTable("registrations", {
   amountPaid: integer("amount_paid").default(0).notNull(),
 });
 
+export const workshopMeetings = pgTable("workshop_meetings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  workshopId: uuid("workshop_id")
+    .notNull()
+    .references(() => workshops.id, { onDelete: "cascade" }),
+  hostId: text("host_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  meetingId: text("meeting_id").notNull(), // Stream ID
+  meetingLink: text("meeting_link"), // optional
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const workshopMeetingRelations = relations(
+  workshopMeetings,
+  ({ one }) => ({
+    workshop: one(workshops, {
+      fields: [workshopMeetings.workshopId],
+      references: [workshops.id],
+    }),
+    host: one(user, {
+      fields: [workshopMeetings.hostId],
+      references: [user.id],
+    }),
+  })
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
@@ -159,4 +189,12 @@ export const workshopRelations = relations(workshops, ({ one }) => ({
   }),
 }));
 
-export const schema = { user, session, account, verification, workshops };
+export const schema = {
+  user,
+  session,
+  account,
+  verification,
+  workshops,
+  registrations,
+  workshopMeetings,
+};

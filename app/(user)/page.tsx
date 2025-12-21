@@ -6,7 +6,6 @@ import Testimonial from "@/components/Testimonial";
 import { Button } from "@/components/ui/button";
 import { Categories } from "@/constants";
 import { serverFetch } from "@/lib/server-fetch";
-import { console } from "inspector";
 import { ArrowRight, CircleCheck } from "lucide-react";
 import Image from "next/image";
 
@@ -24,8 +23,6 @@ const Home = async () => {
     url: "workshops",
     revalidate: 60, // ISR
   });
-
-
 
   return (
     <section>
@@ -92,9 +89,9 @@ const Home = async () => {
         </div>
         <div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-5 space-y-5">
-            {res.workshops.map((workshop)=>(
-            <CourseCard key={workshop.id} workshop={workshop} />
-           ))}
+            {res.workshops.map((workshop) => (
+              <CourseCard key={workshop.id} workshop={workshop} />
+            ))}
           </div>
         </div>
       </CustomLayout>

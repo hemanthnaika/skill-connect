@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "../../globals.css";
 
-import Footer from "@/layout/footer";
-import Navbar from "@/layout/navbar";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "Skill Connect",
+  title: "Skill Connect- Meeting Room",
   description:
     "A community platform where people teach, learn, and join online/offline workshops — all in one place.",
   icons: {
@@ -14,7 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function UserLayout({
+export default async function MeetingLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -22,9 +20,7 @@ export default function UserLayout({
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <Navbar />
       {children}
-      <Footer />
     </>
   );
 }

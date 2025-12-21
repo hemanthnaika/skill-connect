@@ -1,6 +1,9 @@
 import { profile } from "@/assets/images";
 import CourseCard from "@/components/CourseCard";
 import CustomLayout from "@/components/CustomLayout";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import WorkshopButton from "@/components/workshopButton";
+import WorkshopTable from "@/components/WorkshopTable";
 import { auth } from "@/lib/auth";
 import { serverFetch } from "@/lib/server-fetch";
 import { headers } from "next/headers";
@@ -18,6 +21,7 @@ const Profile = async () => {
   const res = await serverFetch<ProfileResponse>({
     url: `users/${session.user?.id}/profile`,
   });
+  console.log(res.conductedWorkshops);
 
   return (
     <section>
@@ -51,14 +55,16 @@ const Profile = async () => {
 
           {/* Created Workshops */}
           <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-3">
-              Workshops You Created
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-              {res.conductedWorkshops.map((workshop, i) => (
-                <CourseCard key={i} workshop={workshop} />
-              ))}
-            </div>
+            <Card className="bg-white shadow-md border-none rounded-2xl">
+              <CardHeader>
+                <h2 className="text-xl font-semibold ">
+                  Workshops You Created
+                </h2>
+              </CardHeader>
+              <CardContent>
+                <WorkshopTable workshop={res.conductedWorkshops} />
+              </CardContent>
+            </Card>
           </div>
 
           {/* Registered Workshops */}
@@ -67,14 +73,13 @@ const Profile = async () => {
               Workshops You Registered For
             </h2>
 
-           
-              {/* Registered Card */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-                {res.joinedWorkshops.map((workshop, i) => (
-                  <CourseCard key={i} workshop={workshop} />
-                ))}
-              </div>
-            
+            {/* Registered Card */}
+            <WorkshopButton />
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mt-5">
+              {res.joinedWorkshops.map((workshop, i) => (
+                <CourseCard key={i} workshop={workshop} />
+              ))}
+            </div>
           </div>
         </div>
       </CustomLayout>

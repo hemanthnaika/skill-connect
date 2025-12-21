@@ -25,7 +25,6 @@ export async function GET(
         address: workshops.address,
         thumbnailUrl: workshops.thumbnailUrl,
         language: workshops.language,
-  
 
         // ✅ paid students count
         studentsCount: sql<number>`

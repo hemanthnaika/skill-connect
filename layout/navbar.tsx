@@ -2,6 +2,7 @@ import { logo, profile } from "@/assets/images";
 
 import CustomLayout from "@/components/CustomLayout";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +12,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { navBar } from "@/constants";
+import { auth } from "@/lib/auth";
+import { SignOutAction } from "@/server/users";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { Button } from "@/components/ui/button";
-import { SignOutAction } from "@/server/users";
 
 const Navbar = async () => {
   const session = await auth.api.getSession({
@@ -57,7 +57,7 @@ const Navbar = async () => {
                 <DropdownMenuContent className="bg-white">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/profile" className="w-full">
                       Profile
                     </Link>

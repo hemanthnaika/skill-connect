@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import { Bricolage_Grotesque } from "next/font/google";
+import "./globals.css";
 
-import Footer from "@/layout/footer";
-import Navbar from "@/layout/navbar";
-import { Toaster } from "react-hot-toast";
+const roboto = Bricolage_Grotesque({
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Skill Connect",
@@ -20,11 +21,8 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Toaster position="top-center" reverseOrder={false} />
-      <Navbar />
-      {children}
-      <Footer />
-    </>
+    <html lang="en" className={roboto.className}>
+      <body className="relative ">{children}</body>
+    </html>
   );
 }

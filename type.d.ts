@@ -18,8 +18,9 @@ interface Workshop {
   language: string;
   studentsCount: number;
   thumbnailUrl: string;
-  isApproved: boolean;
+  status: "pending" | "approved" | "rejected";
   createdAt: string;
+  rejectionReason: string | null;
 }
 
 interface WorkshopResponse {
@@ -39,3 +40,11 @@ interface JoinedWorkshop extends Workshop {
   joinedAt: string;
   workshopId: string;
 }
+
+interface User {
+  id: string;
+  role: string;
+  image?: string;
+  name?: string;
+}
+

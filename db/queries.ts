@@ -1,25 +1,20 @@
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "./drizzle";
 import { registrations, workshops } from "./schema";
 
 export async function getUserConductWorkshops(userId: string) {
   return db
     .select({
-      id: workshops.id,
-      slug: workshops.slug,
-      workshopId: workshops.id,
-      title: workshops.title,
-      category: workshops.category,
-      level: workshops.level,
-      mode: workshops.mode,
-      status: workshops.status,
-      price: workshops.price,
-      rejectionReason: workshops.rejectionReason,
-      createdAt: workshops.createdAt,
-      thumbnailUrl: workshops.thumbnailUrl,
+      ...getTableColumns(workshops),
+
+      studentsCount: sql<number>`
+        COUNT(${registrations.id})
+      `.as("studentsCount"),
     })
     .from(workshops)
-    .where(eq(workshops.createdBy, userId));
+    .leftJoin(registrations, eq(registrations.workshopId, workshops.id))
+    .where(eq(workshops.createdBy, userId))
+    .groupBy(workshops.id);
 }
 
 export async function getUserJoinedWorkshop(userId: string) {

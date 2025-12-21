@@ -1,8 +1,8 @@
 import CustomLayout from "@/components/CustomLayout";
 import SignUpForm from "@/components/form/signUpForm";
-import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 const SignUp = async () => {
@@ -10,7 +10,7 @@ const SignUp = async () => {
     headers: await headers(),
   });
   if (session) {
-    redirect("/dashboard");
+    redirect("/profile");
   }
   return (
     <CustomLayout>
