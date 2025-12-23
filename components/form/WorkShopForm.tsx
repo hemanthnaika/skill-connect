@@ -16,10 +16,12 @@ import { Button } from "../ui/button";
 import z from "zod";
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
+import { useApi } from "@/hooks/useApi";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -129,13 +131,16 @@ const FiledSelect = ({
 );
 
 const WorkShopForm = () => {
+  const searchParams = useSearchParams();
+  const slug = searchParams.get("slug");
+
+  const { request, loading, error } = useApi<WorkshopResponse>();
   const { data: session } = authClient.useSession();
 
   const [preview, setPreview] = useState<string | null>(null);
   const [mode, setMode] = useState<string>("online");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
@@ -149,6 +154,29 @@ const WorkShopForm = () => {
     mode: "onChange",
     reValidateMode: "onChange",
   });
+
+  useEffect(() => {
+    const fetchSlug = async () => {
+      if (!slug) return;
+      const res = await request({
+        url: `/api/workshop/${slug}`,
+        method: "GET",
+      });
+      if (!res) return;
+
+      Object.entries(res.workshop).forEach(([key, value]) => {
+        if (value !== undefined && key !== "thumbnailUrl") {
+          setValue(key as keyof WorkShopType, value, { shouldValidate: true });
+        }
+      });
+
+      const duration = parseFloat(res.workshop.duration);
+      setValue("duration", duration.toString(), { shouldValidate: true });
+      if (res.workshop.thumbnailUrl) setPreview(res.workshop.thumbnailUrl);
+      if (res.workshop.mode) setMode(res.workshop.mode);
+    };
+    fetchSlug();
+  }, [slug]);
 
   const handleFileSelect = (file: File) => {
     setValue("thumbnail", file, { shouldValidate: true });

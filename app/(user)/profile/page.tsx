@@ -62,7 +62,7 @@ const Profile = async () => {
                 </h2>
               </CardHeader>
               <CardContent>
-                <WorkshopTable workshop={res.conductedWorkshops} />
+                <WorkshopTable initialWorkshops={res.conductedWorkshops} />
               </CardContent>
             </Card>
           </div>

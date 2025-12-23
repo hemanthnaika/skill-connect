@@ -29,6 +29,9 @@ import { Edit, MoreVertical, Trash } from "lucide-react";
 
 import Image from "next/image";
 import WorkshopButton from "./workshopButton";
+import { useApi } from "@/hooks/useApi";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
 const TABLE_COLUMNS = [
   "Id",
@@ -51,6 +54,7 @@ const statusStyles: Record<string, string> = {
 };
 
 const ITEMS_PER_PAGE = 5;
+
 type DialogBoxProps = {
   btnText?: string;
   title: string;
@@ -58,6 +62,12 @@ type DialogBoxProps = {
   image?: boolean;
   imageSrc?: string;
 };
+
+type DeleteWorkshopResponse = {
+  message: string;
+  error?: string;
+};
+
 const DialogBox = ({
   btnText,
   title,
@@ -102,16 +112,48 @@ const DialogBox = ({
   </Dialog>
 );
 
-const WorkshopTable = ({ workshop }: { workshop: Workshop[] }) => {
+const WorkshopTable = ({
+  initialWorkshops,
+}: {
+  initialWorkshops: Workshop[];
+}) => {
+  const { request, loading } = useApi<DeleteWorkshopResponse>();
   const [page, setPage] = useState(1);
+  const [workshops, setWorkshops] = useState<Workshop[]>(initialWorkshops);
 
-  const totalPages = Math.ceil(workshop.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(workshops.length / ITEMS_PER_PAGE);
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
-  const currentData = workshop.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const currentData = workshops.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handleDelete = async (id: string) => {
+    if (!id) return;
+    const confirmed = confirm("Are you sure you want to delete this workshop?");
+    if (!confirmed) return;
+
+    const res = await request({
+      url: `/api/workshops/${id}`,
+      method: "DELETE",
+    });
+
+    if (!res) {
+      toast.error("Something went wrong!");
+      return;
+    }
+
+    if (res.error) {
+      toast.error(res.error);
+      return;
+    }
+
+    // ✅ remove workshop from state
+    setWorkshops((prev) => prev.filter((w) => w.id !== id));
+
+    toast.success(res.message);
+  };
 
   return (
-    <div className=" space-y-4">
+    <div className="space-y-4">
       {/* TABLE */}
       <Table>
         <TableHeader>
@@ -123,98 +165,86 @@ const WorkshopTable = ({ workshop }: { workshop: Workshop[] }) => {
         </TableHeader>
 
         <TableBody>
-          {currentData.map((item) => (
-            <TableRow key={item.id}>
-              {/* ID */}
-              <TableCell title={item.id}>{item.id.slice(0, 10)}…</TableCell>
+          {loading
+            ? Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
+                <TableRow key={idx}>
+                  {Array.from({ length: TABLE_COLUMNS.length }).map((_, i) => (
+                    <TableCell key={i}>
+                      <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            : currentData.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell title={item.id}>{item.id.slice(0, 10)}…</TableCell>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>
+                    <DialogBox
+                      title={`${item.title}`}
+                      imageSrc={`${item.thumbnailUrl}`}
+                      image={true}
+                    />
+                  </TableCell>
+                  <TableCell>{item.price}</TableCell>
+                  <TableCell>
+                    {new Date(item.date).toLocaleDateString("en-GB")}
+                  </TableCell>
+                  <TableCell>{item.time}</TableCell>
+                  <TableCell className="capitalize">{item.mode}</TableCell>
+                  <TableCell className="capitalize">
+                    <span className={statusStyles[item.status]}>
+                      {item.status}
+                    </span>
+                    {item.status === "rejected" && item.rejectionReason && (
+                      <DialogBox
+                        btnText="View Reason"
+                        title="Rejection Reason"
+                        description={item.rejectionReason}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>{item.studentsCount}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-2 rounded hover:bg-gray-100">
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                      </DropdownMenuTrigger>
 
-              {/* Title */}
-              <TableCell>{item.title}</TableCell>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-40 bg-white shadow-md"
+                      >
+                        <DropdownMenuItem>
+                          <Link
+                            href={`/workshops/conductWorkshop?slug=${item.slug}`}
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </Link>
+                        </DropdownMenuItem>
 
-              {/* Thumbnail */}
-              <TableCell>
-                <DialogBox
-                  title={`${item.title}`}
-                  imageSrc={`${item.thumbnailUrl}`}
-                  image={true}
-                />
-              </TableCell>
-
-              {/* Price */}
-              <TableCell>{item.price}</TableCell>
-
-              {/* Date */}
-              <TableCell>
-                {" "}
-                {new Date(item.date).toLocaleDateString("en-GB")}
-              </TableCell>
-
-              {/* Time */}
-              <TableCell>{item.time}</TableCell>
-
-              {/* Mode */}
-              <TableCell className="capitalize">{item.mode}</TableCell>
-
-              {/* Status */}
-              <TableCell className="capitalize">
-                <span className={statusStyles[item.status]}>{item.status}</span>
-
-                {item.status === "rejected" && item.rejectionReason && (
-                  <DialogBox
-                    btnText="View Reason"
-                    title="Rejection Reason"
-                    description={item.rejectionReason}
-                  />
-                )}
-              </TableCell>
-              {/* Register Students */}
-              <TableCell>{item.studentsCount}</TableCell>
-              {/* Actions */}
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="p-2 rounded hover:bg-gray-100">
-                      <MoreVertical className="h-4 w-4" />
-                    </button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-40 bg-white shadow-md "
-                  >
-                    <DropdownMenuItem
-                      onClick={() => {
-                        // navigate to edit page
-                        // router.push(`/admin/workshops/edit/${item.id}`)
-                        console.log("Edit", item.id);
-                      }}
-                    >
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      className="text-red-600 focus:text-red-600"
-                      onClick={() => {
-                        // open delete confirmation modal
-                        console.log("Delete", item.id);
-                      }}
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-              <TableCell>
-                <WorkshopButton isCreate={true} workshopId={item.id} />
-              </TableCell>
-            </TableRow>
-          ))}
+                        <DropdownMenuItem
+                          disabled={loading}
+                          className="text-red-600 focus:text-red-600"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <Trash className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                  <TableCell>
+                    <WorkshopButton isCreate={true} workshopId={item.id} />
+                  </TableCell>
+                </TableRow>
+              ))}
 
           {currentData.length === 0 && (
             <TableRow>
-              <TableCell colSpan={8} className="text-center text-gray-500">
+              <TableCell colSpan={12} className="text-center text-gray-500">
                 No workshops found
               </TableCell>
             </TableRow>

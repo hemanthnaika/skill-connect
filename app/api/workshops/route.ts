@@ -1,7 +1,9 @@
 import { db } from "@/db/drizzle";
 import { registrations, workshops } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import cloudinary from "@/lib/cloudinary";
 import { eq, sql } from "drizzle-orm";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 // Cloudinary upload result type

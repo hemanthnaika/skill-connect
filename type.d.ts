@@ -13,8 +13,8 @@ interface Workshop {
   time: string;
   duration: string;
   price: number;
-  mode: string;
-  address: null;
+  mode: "online" | "offline" | "both";
+  address?: string | null;
   language: string;
   studentsCount: number;
   thumbnailUrl: string;
@@ -47,4 +47,3 @@ interface User {
   image?: string;
   name?: string;
 }
-
