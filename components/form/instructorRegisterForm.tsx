@@ -1,24 +1,17 @@
 "use client";
 
 import { useMultiStepForm } from "@/hooks/use-multi-step-from";
-import { cn } from "@/lib/lib/utils";
+
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { StepFormData } from "@/types/fromType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+
 import { formStep, FormStepData } from "@/constants";
 import { DynamicFormField } from "./DynamicFormField";
+import { cn } from "@/lib/utils";
 
 const StepInfo = ({
   title,
@@ -64,7 +57,7 @@ const InstructorRegisterForm = () => {
     formData,
     updateFormData,
     submitForm,
-    isFirstStep,
+
     isLastStep,
   } = useMultiStepForm();
   const form = useForm<StepFormData>({
