@@ -122,6 +122,53 @@ export const workshops = pgTable("workshops", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const kycStatusEnum = pgEnum("kyc_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+export const KYCVerification = pgTable(
+  "kyc_verification",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    phone: varchar("phone", { length: 10 }).notNull(),
+    socialLink: varchar("social_link", { length: 300 }),
+    experience: varchar("experience", { length: 300 }).notNull(),
+    skills: varchar("skills", { length: 300 }).notNull(),
+    document: varchar("document", { length: 300 }).notNull(),
+    selfie: varchar("selfie", { length: 300 }).notNull(),
+    upiId: varchar("upi_id", { length: 300 }).notNull(),
+    status: kycStatusEnum("status").default("pending").notNull(),
+    rejectionReason: text("rejection_reason"),
+    reviewedAt: timestamp("reviewed_at"),
+    reviewedBy: text("reviewed_by").references(() => user.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 🔒 Ensure one KYC per user
+    index("kyc_user_unique_idx").on(table.userId),
+  ]
+);
+
+export const kycRelations = relations(KYCVerification, ({ one }) => ({
+  user: one(user, {
+    fields: [KYCVerification.userId],
+    references: [user.id],
+  }),
+  reviewer: one(user, {
+    fields: [KYCVerification.reviewedBy],
+    references: [user.id],
+  }),
+}));
+
 export const registrations = pgTable("registrations", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id")
@@ -134,33 +181,6 @@ export const registrations = pgTable("registrations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   amountPaid: integer("amount_paid").default(0).notNull(),
 });
-
-export const workshopMeetings = pgTable("workshop_meetings", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  workshopId: uuid("workshop_id")
-    .notNull()
-    .references(() => workshops.id, { onDelete: "cascade" }),
-  hostId: text("host_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  meetingId: text("meeting_id").notNull(), // Stream ID
-  meetingLink: text("meeting_link"), // optional
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const workshopMeetingRelations = relations(
-  workshopMeetings,
-  ({ one }) => ({
-    workshop: one(workshops, {
-      fields: [workshopMeetings.workshopId],
-      references: [workshops.id],
-    }),
-    host: one(user, {
-      fields: [workshopMeetings.hostId],
-      references: [user.id],
-    }),
-  })
-);
 
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
@@ -196,5 +216,5 @@ export const schema = {
   verification,
   workshops,
   registrations,
-  workshopMeetings,
+  KYCVerification,
 };

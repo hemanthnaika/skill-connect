@@ -21,7 +21,7 @@ interface DynamicFormFieldProps<T extends FieldValues> {
   item: {
     name: Path<T>;
     placeholder: string;
-    type: "text" | "email" | "number" | "file" | "textarea" | "checkbox";
+    type: "text" | "number" | "file" | "textarea" | "checkbox";
     accept?: string;
     options?: OptionProps[];
   };
@@ -46,7 +46,6 @@ export function DynamicFormField<T extends FieldValues>({
           const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files ? e.target.files[0] : null;
             onChange(file);
-
             if (file) {
               const url = URL.createObjectURL(file);
               setPreview(url);

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
 
 type ApiState<T> = {
   data: T | null;
@@ -41,7 +42,7 @@ export function useApi<TResponse>() {
           error.response?.data?.message ??
           error.message ??
           "Something went wrong";
-
+        toast.error(message);
         setState({
           data: null,
           error: message,

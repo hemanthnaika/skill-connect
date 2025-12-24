@@ -1,20 +1,18 @@
 import * as z from "zod";
 
 export const PersonalInfo = z.object({
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  email: z.string().email("Invalid email"),
   phone: z
     .string()
     .min(10, "Phone number required")
     .max(10, "Invalid phone number"),
-  socialLinks: z
+  socialLink: z
     .string()
     .regex(
       /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
       "Invalid URL format"
     ),
-  category: z.array(z.string()).min(1, "Select at least one category"),
   experience: z.string().min(5, "Please explain your experience"),
+  skills: z.array(z.string()).min(1, "Select at least one category"),
 });
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
@@ -26,7 +24,7 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export const GovInfo = z.object({
-  govId: z
+  document: z
     .instanceof(File, { message: "Please upload a file." })
     .refine((file) => file.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
     .refine(

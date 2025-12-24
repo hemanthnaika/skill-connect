@@ -130,20 +130,18 @@ export const formStep = [
 ];
 
 export type FieldName =
-  | "fullName"
-  | "email"
   | "phone"
-  | "socialLinks"
-  | "govId"
+  | "socialLink"
+  | "document"
   | "selfie"
-  | "category"
+  | "skills"
   | "experience"
   | "upiId";
 
 interface FieldItem {
   name: FieldName;
   placeholder: string;
-  type: "text" | "email" | "number" | "file" | "checkbox" | "textarea";
+  type: "text" | "number" | "file" | "checkbox" | "textarea";
   accept?: string;
   options?: { label: string; value: string }[];
 }
@@ -152,18 +150,16 @@ export const FormStepData: { step: number; fields: FieldItem[] }[] = [
   {
     step: 0,
     fields: [
-      { name: "fullName", placeholder: "Full Name", type: "text" },
-      { name: "email", placeholder: "Email", type: "email" },
       { name: "phone", placeholder: "Phone Number", type: "number" },
-      { name: "socialLinks", placeholder: "Social Links", type: "text" },
+      { name: "socialLink", placeholder: "Social Links", type: "text" },
       {
         name: "experience",
         placeholder: "Explain your experience…",
         type: "text",
       },
       {
-        name: "category",
-        placeholder: "Select Skill Category",
+        name: "skills",
+        placeholder: "Select Skill ",
         type: "checkbox",
         options: [
           { label: "Art", value: "art" },
@@ -179,7 +175,7 @@ export const FormStepData: { step: number; fields: FieldItem[] }[] = [
     step: 1,
     fields: [
       {
-        name: "govId",
+        name: "document",
         placeholder: "Upload Aadhar/PAN",
         type: "file",
         accept: "image/*",

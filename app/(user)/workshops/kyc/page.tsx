@@ -5,7 +5,7 @@ import { kyc } from "@/assets/images";
 
 const InstructorRegister = () => {
   return (
-    <section>
+    <section className="pt-12">
       <CustomLayout>
         <h1 className="my-5 text-xl font-bold text-center">
           Instructor KYC Verification

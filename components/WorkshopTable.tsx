@@ -220,9 +220,12 @@ const WorkshopTable = ({
                         <DropdownMenuItem>
                           <Link
                             href={`/workshops/conductWorkshop?slug=${item.slug}`}
+                            className="flex items-center"
                           >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
+                            <Edit className="mr-3 h-4 w-4 text-orange-500" />
+                            <span className="text-orange-500">
+                              Edit Workshop
+                            </span>
                           </Link>
                         </DropdownMenuItem>
 

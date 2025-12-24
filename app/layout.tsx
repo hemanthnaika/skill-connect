@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 
-const roboto = Bricolage_Grotesque({
+const roboto = Roboto({
   subsets: ["latin"],
 });
 

@@ -4,7 +4,7 @@ import { useMultiStepForm } from "@/hooks/use-multi-step-from";
 
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { StepFormData } from "@/types/fromType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -12,6 +12,7 @@ import React from "react";
 import { formStep, FormStepData } from "@/constants";
 import { DynamicFormField } from "./DynamicFormField";
 import { cn } from "@/lib/utils";
+import { Form } from "../ui/form";
 
 const StepInfo = ({
   title,
@@ -57,7 +58,7 @@ const InstructorRegisterForm = () => {
     formData,
     updateFormData,
     submitForm,
-
+    isSubmitted,
     isLastStep,
   } = useMultiStepForm();
   const form = useForm<StepFormData>({
@@ -116,14 +117,19 @@ const InstructorRegisterForm = () => {
         </Form>
       </div>
       <div className="flex items-center justify-between align-bottom">
-        <Button className="bg-primary text-white" onClick={goToPreviousStep}>
+        <Button
+          className="bg-primary text-white"
+          onClick={goToPreviousStep}
+          disabled={isSubmitted}
+        >
           Prev
         </Button>
         <Button
+          disabled={isSubmitted}
           className="bg-primary text-white"
           onClick={form.handleSubmit(onNext)}
         >
-          Next
+          {isLastStep ? "Submit" : "Next"}
         </Button>
       </div>
     </section>

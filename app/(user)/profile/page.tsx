@@ -24,9 +24,9 @@ const Profile = async () => {
   console.log(res.conductedWorkshops);
 
   return (
-    <section>
+    <section className="pt-20">
       <CustomLayout>
-        <div className=" mt-10  bg-white ">
+        <div className="  bg-white ">
           {/* Header Section */}
           <div className="flex items-center gap-4">
             <Image
