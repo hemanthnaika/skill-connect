@@ -28,11 +28,12 @@ export async function GET(
 }
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     // ✅ Ensure only admin can update KYC
-    const admin = await requireAdmin();
+    await requireAdmin();
+    const { id } = await context.params;
 
     // ✅ Read payload from frontend
     const body = await req.json();
@@ -56,12 +57,9 @@ export async function PATCH(
       .update(KYCVerification)
       .set({
         status,
-        reviewedAt: new Date(),
-        reviewedBy: admin.id,
         rejectionReason: status === "rejected" ? rejectionReason : null,
       })
-      .where(eq(KYCVerification.id, params.id));
-
+      .where(eq(KYCVerification.id, id));
     return Response.json({
       message: `KYC ${status} successfully`,
     });

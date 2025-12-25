@@ -144,8 +144,6 @@ export const KYCVerification = pgTable(
     upiId: varchar("upi_id", { length: 300 }).notNull(),
     status: kycStatusEnum("status").default("pending").notNull(),
     rejectionReason: text("rejection_reason"),
-    reviewedAt: timestamp("reviewed_at"),
-    reviewedBy: text("reviewed_by").references(() => user.id),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -161,10 +159,6 @@ export const KYCVerification = pgTable(
 export const kycRelations = relations(KYCVerification, ({ one }) => ({
   user: one(user, {
     fields: [KYCVerification.userId],
-    references: [user.id],
-  }),
-  reviewer: one(user, {
-    fields: [KYCVerification.reviewedBy],
     references: [user.id],
   }),
 }));
@@ -217,4 +211,5 @@ export const schema = {
   workshops,
   registrations,
   KYCVerification,
+  kycRelations,
 };

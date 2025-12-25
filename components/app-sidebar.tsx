@@ -95,7 +95,7 @@ const data = {
   projects: [
     {
       name: "KYC Verification",
-      url: "#",
+      url: "/admin/kycVerification",
       icon: Verified,
     },
     {

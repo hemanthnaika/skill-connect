@@ -47,3 +47,34 @@ interface User {
   image?: string;
   name?: string;
 }
+
+interface KYCResponse {
+  KYC: KYC[];
+}
+
+interface KYC {
+  id: string;
+  userId: string;
+  phone: string;
+  socialLink: string;
+  experience: string;
+  skills: string;
+  document: string;
+  selfie: string;
+  upiId: string;
+  status: string;
+  rejectionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: User;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface KYCUpdateResponse {
+  message: string;
+}
