@@ -1,319 +1,59 @@
-"use client";
-
-import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
+import UsersTable from "@/components/Admin/UsersTable";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { db } from "@/db/drizzle";
+import { user, workshops, registrations, KYCVerification } from "@/db/schema";
+import { requireAdmin } from "@/lib/rbac";
+import { eq, sql } from "drizzle-orm";
+import { Users } from "lucide-react";
 
-type Payment = {
-  id: string;
-  email: string;
-  joined: string;
-};
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-   {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  }, {
-    id: "m5gr84i9",
-    email: "ken99@example.com",
-    joined: "2 days ago",
-  },
-  
-];
+export default async function AdminUsersPage() {
+  await requireAdmin();
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "joined",
-    header: () => <div className="text-right">Joined</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">{row.getValue("joined")}</div>
-      );
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: () => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-white shadow-md">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+  const users = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
 
-const Students = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+      // 🔢 conducted workshops
+      conductedCount: sql<number>`
+        COUNT(DISTINCT ${workshops.id})
+      `.as("conductedCount"),
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
+      // 🔢 registered workshops
+      registeredCount: sql<number>`
+        COUNT(DISTINCT ${registrations.id})
+      `.as("registeredCount"),
+
+      // 🪪 KYC status
+      kycStatus: KYCVerification.status,
+    })
+    .from(user)
+    .leftJoin(workshops, eq(workshops.createdBy, user.id))
+    .leftJoin(registrations, eq(registrations.userId, user.id))
+    .leftJoin(KYCVerification, eq(KYCVerification.userId, user.id))
+    .groupBy(
+      user.id,
+      user.name,
+      user.email,
+      user.role,
+      user.createdAt,
+      KYCVerification.status
+    )
+    .orderBy(sql`${user.createdAt} DESC`);
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold mb-1">Users Overview</h1>
+        <Button className="gap-2">
+          <Users className="h-4 w-4" />
+          Total Users: {users.length}
+        </Button>
       </div>
-      <div className="overflow-hidden rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <UsersTable data={users} />
     </div>
   );
-};
-
-export default Students;
+}

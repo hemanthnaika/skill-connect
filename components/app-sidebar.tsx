@@ -44,12 +44,8 @@ const data = {
 
       items: [
         {
-          title: " Students",
+          title: "All Users",
           url: "/admin/students",
-        },
-        {
-          title: "Instructors",
-          url: "/admin/instructors",
         },
       ],
     },
