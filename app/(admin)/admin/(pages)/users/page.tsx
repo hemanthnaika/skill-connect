@@ -1,4 +1,7 @@
 import UsersTable from "@/components/Admin/UsersTable";
+import { userColumns } from "@/components/columns";
+import { DataTable } from "@/components/table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/drizzle";
 import { user, workshops, registrations, KYCVerification } from "@/db/schema";
@@ -16,6 +19,7 @@ export default async function AdminUsersPage() {
       email: user.email,
       role: user.role,
       createdAt: user.createdAt,
+      image: user.image,
 
       // 🔢 conducted workshops
       conductedCount: sql<number>`
@@ -43,17 +47,18 @@ export default async function AdminUsersPage() {
       KYCVerification.status
     )
     .orderBy(sql`${user.createdAt} DESC`);
-
+  console.log(users);
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold mb-1">Users Overview</h1>
-        <Button className="gap-2">
-          <Users className="h-4 w-4" />
-          Total Users: {users.length}
-        </Button>
+    <div className="space-y-5">
+      <h1 className="text-2xl font-semibold mb-1">Users Overview</h1>
+      <div className="bg-white shadow p-5 rounded-md">
+        <DataTable
+          columns={userColumns}
+          data={users}
+          placeholder="Search by name,role or email...."
+          searchColumns={["email", "name", "role"]}
+        />
       </div>
-      <UsersTable data={users} />
     </div>
   );
 }

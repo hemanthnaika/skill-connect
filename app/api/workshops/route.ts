@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { registrations, workshops } from "@/db/schema";
+import { registrations, user, workshops } from "@/db/schema";
 
 import cloudinary from "@/lib/cloudinary";
 import { eq, sql } from "drizzle-orm";
@@ -112,6 +112,18 @@ export async function GET() {
         date: workshops.date,
         price: workshops.price,
         thumbnailUrl: workshops.thumbnailUrl,
+        description: workshops.description,
+        status: workshops.status,
+        mode: workshops.mode,
+        address: workshops.address,
+        language: workshops.language,
+        time: workshops.time,
+        duration: workshops.duration,
+
+        // ✅ creator info
+        creatorName: user.name,
+        creatorImage: user.image,
+        createEmail: user.email,
 
         // ✅ count ONLY paid students
         studentsCount: sql<number>`
@@ -124,9 +136,12 @@ export async function GET() {
         `.as("studentsCount"),
       })
       .from(workshops)
+      // creator join
+      .leftJoin(user, eq(user.id, workshops.createdBy))
+      // registrations join
       .leftJoin(registrations, eq(registrations.workshopId, workshops.id))
       .where(eq(workshops.status, "approved"))
-      .groupBy(workshops.id)
+      .groupBy(workshops.id, user.id)
       .orderBy(workshops.date);
 
     return NextResponse.json({ workshops: approvedWorkshops });

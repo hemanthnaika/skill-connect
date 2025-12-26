@@ -21,6 +21,10 @@ interface Workshop {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   rejectionReason: string | null;
+  creatorName: string;
+  creatorImage: string;
+  createdBy?: string;
+  createEmail: string;
 }
 
 interface WorkshopResponse {
@@ -77,4 +81,15 @@ interface User {
 
 interface KYCUpdateResponse {
   message: string;
+}
+
+interface WorkshopCreator {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface PendingWorkshop {
+  workshop: Workshop;
+  user: WorkshopCreator | null; // leftJoin → can be null
 }

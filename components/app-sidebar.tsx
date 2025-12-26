@@ -45,7 +45,7 @@ const data = {
       items: [
         {
           title: "All Users",
-          url: "/admin/students",
+          url: "/admin/users",
         },
       ],
     },
@@ -56,15 +56,11 @@ const data = {
       items: [
         {
           title: "All Workshops",
-          url: "#",
+          url: "/admin/allWorkshops",
         },
         {
           title: "Pending Approval",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          url: "/admin/pendingApprovalWorkshops",
         },
       ],
     },

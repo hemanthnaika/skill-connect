@@ -183,7 +183,7 @@ export default function UsersTable({ data }: { data: UserRow[] }) {
       {/* ----------------------------------
          Table Card
       ----------------------------------- */}
-      <div className="border rounded-md shadow-sm overflow-hidden   px-5 py-4 ">
+      <div className=" rounded-md shadow    px-5 py-4 bg-white dark:bg-black">
         <Table>
           <TableHeader className="bg-primary/10 ">
             {table.getHeaderGroups().map((hg) => (
