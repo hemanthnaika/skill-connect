@@ -1,6 +1,7 @@
 import { db } from "@/db/drizzle";
 import { registrations } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/workshops/${slug}?payment=success&user=${userId}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/workshops/${slug}?payment=cancel`,
     });
-
+    revalidateTag("admin-dashboard", {});
     return NextResponse.json({ url: session.url });
   } catch (err) {
     const error = err instanceof Error ? err : new Error("Unknown error");

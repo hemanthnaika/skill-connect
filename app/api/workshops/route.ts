@@ -3,6 +3,7 @@ import { registrations, user, workshops } from "@/db/schema";
 
 import cloudinary from "@/lib/cloudinary";
 import { eq, sql } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 import { NextResponse } from "next/server";
 
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
 
     // Insert into DB
     await db.insert(workshops).values(data);
-
+    revalidateTag("admin-dashboard", {});
     return NextResponse.json({ message: "Workshop created!", slug });
   } catch (error) {
     console.log(error);

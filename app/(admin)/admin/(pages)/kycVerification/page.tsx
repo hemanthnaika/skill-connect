@@ -2,18 +2,15 @@ import KYCTable from "@/components/KYCTable";
 
 const KYCVerification = () => {
   return (
-    <div className=" bg-gray-50 p-5">
+    <div className="">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          KYC Verification
-        </h1>
-        <p className="text-gray-600 text-sm md:text-base">
+        <h1 className="text-3xl font-bold  mb-2">KYC Verification</h1>
+        <p className=" text-sm md:text-base">
           Review and manage users’ KYC submissions. Approve, reject, or view
           details.
         </p>
       </div>
-
       <KYCTable />
     </div>
   );

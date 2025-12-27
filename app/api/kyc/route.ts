@@ -2,6 +2,7 @@ import { db } from "@/db/drizzle";
 import { KYCVerification } from "@/db/schema";
 import cloudinary from "@/lib/cloudinary";
 import { requireAuth } from "@/lib/rbac";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 interface CloudinaryUploadResult {
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
       selfie: selfieUpload.secure_url,
       upiId,
     });
-
+    revalidateTag("admin-dashboard", {});
     return NextResponse.json(
       { message: "KYC submitted successfully" },
       { status: 200 }

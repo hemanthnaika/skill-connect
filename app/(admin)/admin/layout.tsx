@@ -47,10 +47,10 @@ export default async function UserLayout({
         disableTransitionOnChange
       >
         <Toaster position="top-center" reverseOrder={false} />
-        <SidebarProvider className="bg-secondary dark:bg-black">
+        <SidebarProvider className="bg-secondary dark:bg-[#18181B]">
           <AppSidebar />
           <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 ">
               <div className="flex  items-center justify-between w-full px-4">
                 <div className="flex items-center gap-2 px-4">
                   <SidebarTrigger className="-ml-1" />

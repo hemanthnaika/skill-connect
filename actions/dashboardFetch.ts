@@ -1,20 +1,17 @@
-import { NextResponse } from "next/server";
+"use server";
 
-import { user, workshops, registrations, KYCVerification } from "@/db/schema";
-import { sql, desc, eq } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { db } from "@/db/drizzle";
+import { KYCVerification, registrations, user, workshops } from "@/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 
-/* =========================
-   GET: Admin Dashboard Data
-========================= */
-export async function GET() {
-  try {
+export const dashboardFetch = unstable_cache(
+  async () => {
     /* -------------------------
        1. TOTAL USERS
     -------------------------- */
     const totalUsersRes = await db.select({ count: sql`count(*)` }).from(user);
-
-    const totalUsers = Number(totalUsersRes[0].count);
+    const totalUsers = Number(totalUsersRes[0]?.count || 0);
 
     /* -------------------------
        2. TOTAL WORKSHOPS
@@ -22,8 +19,7 @@ export async function GET() {
     const totalWorkshopsRes = await db
       .select({ count: sql`count(*)` })
       .from(workshops);
-
-    const totalWorkshops = Number(totalWorkshopsRes[0].count);
+    const totalWorkshops = Number(totalWorkshopsRes[0]?.count || 0);
 
     /* -------------------------
        3. PENDING KYC
@@ -32,8 +28,7 @@ export async function GET() {
       .select({ count: sql`count(*)` })
       .from(KYCVerification)
       .where(eq(KYCVerification.status, "pending"));
-
-    const pendingKyc = Number(pendingKycRes[0].count);
+    const pendingKyc = Number(pendingKycRes[0]?.count || 0);
 
     /* -------------------------
        4. TOTAL REVENUE
@@ -43,14 +38,12 @@ export async function GET() {
         total: sql`COALESCE(SUM(${registrations.amountPaid}), 0)`,
       })
       .from(registrations);
-
-    const totalRevenue = Number(totalRevenueRes[0].total);
+    const totalRevenue = Number(totalRevenueRes[0]?.total || 0);
 
     /* -------------------------
        5. MONTHLY REVENUE GRAPH
-       (Same structure you want)
     -------------------------- */
-    const revenueRows = await db.execute(sql`
+    const revenueResult = await db.execute(sql`
       SELECT 
         TO_CHAR(created_at, 'Mon') AS month,
         SUM(amount_paid) AS revenue
@@ -59,10 +52,35 @@ export async function GET() {
       ORDER BY DATE_TRUNC('month', created_at)
     `);
 
-    const revenueData = revenueRows.rows.map((row) => ({
-      month: row.month,
+    const rows = revenueResult.rows ?? revenueResult;
+
+    let revenueData = rows.map((row) => ({
+      month: String(row.month),
       revenue: Number(row.revenue),
     }));
+
+    // ✅ FIX: if only one month, add previous month with 0 revenue
+    if (revenueData.length === 1) {
+      const monthOrder = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const currentIndex = monthOrder.indexOf(revenueData[0].month);
+      const prevMonth = monthOrder[(currentIndex - 1 + 12) % 12];
+
+      revenueData = [{ month: prevMonth, revenue: 0 }, revenueData[0]];
+    }
 
     /* -------------------------
        6. UPCOMING 5 WORKSHOPS
@@ -77,7 +95,7 @@ export async function GET() {
         mode: workshops.mode,
       })
       .from(workshops)
-      .orderBy(workshops.date)
+      .orderBy(desc(workshops.createdAt))
       .limit(5);
 
     /* -------------------------
@@ -95,25 +113,19 @@ export async function GET() {
       .orderBy(desc(user.createdAt))
       .limit(5);
 
-    /* -------------------------
-       FINAL RESPONSE
-    -------------------------- */
-    return NextResponse.json({
-      stats: {
-        totalUsers,
-        totalWorkshops,
-        pendingKyc,
-        totalRevenue,
-      },
-      revenueData, // <-- chart data
-      upcomingWorkshops, // <-- next 5 workshops
-      recentUsers, // <-- last 5 users
-    });
-  } catch (error) {
-    console.error("Admin Dashboard Error:", error);
-    return NextResponse.json(
-      { message: "Failed to load dashboard data" },
-      { status: 500 }
-    );
+    return {
+      totalUsers,
+      totalWorkshops,
+      pendingKyc,
+      totalRevenue,
+      revenueData,
+      upcomingWorkshops,
+      recentUsers,
+    };
+  },
+  ["admin-dashboard"],
+  {
+    revalidate: 60, // auto refresh every 60 seconds
+    tags: ["admin-dashboard"],
   }
-}
+);

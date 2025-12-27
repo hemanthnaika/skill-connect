@@ -111,14 +111,14 @@ const KYCTable = () => {
   }
 
   return (
-    <div className=" rounded-lg border border-gray-200 shadow-lg">
+    <div className=" ">
       <Table className="min-w-full">
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-gray-50 dark:bg-black">
           <TableRow>
             {TableColumns.map((column, i) => (
               <TableHead
                 key={i}
-                className="text-left text-sm font-semibold text-gray-700 px-6 py-3"
+                className="text-left text-sm font-semibold  px-6 py-3"
               >
                 {column}
               </TableHead>
@@ -126,17 +126,14 @@ const KYCTable = () => {
           </TableRow>
         </TableHeader>
 
-        <TableBody className="bg-white divide-y divide-gray-200">
+        <TableBody className="bg-white dark:bg-black divide-y divide-gray-200 dark:text-white">
           {data.map((item) => (
-            <TableRow
-              key={item.id}
-              className="hover:bg-gray-50 transition-colors duration-200"
-            >
-              <TableCell className="px-6 py-4 font-medium text-gray-800">
+            <TableRow key={item.id}>
+              <TableCell className="px-6 py-4 font-medium ">
                 {item.id.slice(0, 8)}
               </TableCell>
 
-              <TableCell className="px-6 py-4 font-medium text-gray-800">
+              <TableCell className="px-6 py-4 font-medium ">
                 <div className="flex flex-col">
                   <span className="font-semibold">{item.user.name}</span>
                   <span className="text-sm text-gray-500">
@@ -158,15 +155,15 @@ const KYCTable = () => {
               <TableCell className="px-6 py-4 text-right">
                 <Dialog>
                   <DialogTrigger className="p-2 rounded-full hover:bg-gray-100 transition">
-                    <Ellipsis className="w-5 h-5 text-gray-600" />
+                    <Ellipsis className="w-5 h-5 " />
                   </DialogTrigger>
 
-                  <DialogContent className="bg-white rounded-xl p-6 max-w-lg mx-auto shadow-lg  max-h-[90vh] overflow-y-auto">
+                  <DialogContent className="bg-white rounded-xl p-6 max-w-lg mx-auto shadow-lg  max-h-[90vh] overflow-y-auto dark:bg-black dark:text-white">
                     <DialogHeader>
-                      <DialogTitle className="text-xl font-semibold text-gray-900">
+                      <DialogTitle className="text-xl font-semibold ">
                         KYC Details
                       </DialogTitle>
-                      <DialogDescription className="text-gray-600 text-sm mt-1">
+                      <DialogDescription className=" text-sm mt-1">
                         Review and manage this KYC submission
                       </DialogDescription>
                     </DialogHeader>
@@ -182,18 +179,14 @@ const KYCTable = () => {
                         ["Experience", item.experience],
                       ].map(([label, value], idx) => (
                         <div key={idx} className="flex justify-between">
-                          <span className="font-medium text-gray-700">
-                            {label}:
-                          </span>
-                          <span className="text-gray-900">{value}</span>
+                          <span className="font-medium ">{label}:</span>
+                          <span>{value}</span>
                         </div>
                       ))}
 
                       {/* Skills */}
                       <div className="flex flex-col gap-2">
-                        <span className="font-medium text-gray-700">
-                          Skills:
-                        </span>
+                        <span className="font-medium ">Skills:</span>
                         <div className="flex flex-wrap gap-2">
                           {JSON.parse(
                             item.skills
@@ -212,9 +205,7 @@ const KYCTable = () => {
 
                       {/* Documents Gallery */}
                       <div className="flex flex-col gap-2 mt-2">
-                        <span className="font-medium text-gray-700">
-                          Documents:
-                        </span>
+                        <span className="font-medium ">Documents:</span>
                         <div className="grid grid-cols-2 gap-3">
                           {[item.document, item.selfie].map((src, idx) => (
                             <Link

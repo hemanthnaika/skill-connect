@@ -19,7 +19,7 @@ const CardSection = ({
   icon: LucideIcon;
 }) => {
   return (
-    <Card className="@container/card border-secondary shadow-md ">
+    <Card className="@container/card border-secondary shadow-md bg-white dark:bg-black ">
       <CardHeader>
         <CardDescription>{title}</CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">

@@ -10,15 +10,11 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-const recentUsers = [
-  { name: "Rohit Sharma", course: "Java Full Stack", joined: "2 days ago" },
-  { name: "Priya Patel", course: "Python with ML", joined: "4 days ago" },
-  { name: "Aman Kumar", course: "AWS DevOps", joined: "1 week ago" },
-];
 
-const RecentUser = () => {
+
+const RecentUser = ({ data }: { data: RecentUser[] }) => {
   return (
-    <Card className="border-secondary shadow-md">
+    <Card className="border-secondary shadow-md bg-white dark:bg-black">
       <CardHeader>
         <CardTitle>Recent User</CardTitle>
       </CardHeader>
@@ -28,16 +24,16 @@ const RecentUser = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Course</TableHead>
-              <TableHead>Joined</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Joined At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentUsers.map((user, i) => (
+            {data.map((user, i) => (
               <TableRow key={i}>
                 <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.course}</TableCell>
-                <TableCell>{user.joined}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{new Date(user.createdAt).toDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>

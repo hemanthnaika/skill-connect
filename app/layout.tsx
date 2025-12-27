@@ -22,7 +22,7 @@ export default function UserLayout({
 }) {
   return (
     <html lang="en" className={roboto.className}>
-      <body className="relative ">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

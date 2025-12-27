@@ -176,3 +176,39 @@ interface Workshop {
   thumbnailUrl: string;
   status: string;
 }
+
+interface DashboardData {
+  stats: Stats;
+  revenueData: RevenueDatum[];
+  upcomingWorkshops: UpcomingWorkshop[];
+  recentUsers: RecentUser[];
+}
+
+interface RecentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+}
+
+interface UpcomingWorkshop {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  price: number;
+  mode: string;
+}
+
+interface RevenueDatum {
+  month: string;
+  revenue: number;
+}
+
+interface Stats {
+  totalUsers: number;
+  totalWorkshops: number;
+  pendingKyc: number;
+  totalRevenue: number;
+}

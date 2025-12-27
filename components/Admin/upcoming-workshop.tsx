@@ -1,23 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-const workshops = [
-  { title: "React Bootcamp", mode: "Online", date: "15 Feb" },
-  { title: "Java Backend", mode: "Offline", date: "20 Feb" },
-  { title: "UI/UX Workshop", mode: "Hybrid", date: "28 Feb" },
-];
 
-const UpcomingWorkshop = () => {
+
+const UpcomingWorkshop = ({ data }: { data: UpcomingWorkshop[] }) => {
   return (
-    <Card className="border-secondary shadow-md">
+    <Card className="border-secondary shadow-md bg-white dark:bg-black">
       <CardHeader>
         <CardTitle>Upcoming Workshops</CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="space-y-3">
-          {workshops.map((item, i) => (
+          {data.map((item, i) => (
             <li
               key={i}
-              className="p-3 rounded-md bg-gray-100 flex justify-between"
+              className="p-3 rounded-md bg-gray-100 flex justify-between dark:bg-black dark:text-white"
             >
               <span>
                 {item.title} ({item.mode})

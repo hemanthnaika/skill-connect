@@ -1,13 +1,10 @@
-import UsersTable from "@/components/Admin/UsersTable";
 import { userColumns } from "@/components/columns";
 import { DataTable } from "@/components/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import { db } from "@/db/drizzle";
 import { user, workshops, registrations, KYCVerification } from "@/db/schema";
 import { requireAdmin } from "@/lib/rbac";
 import { eq, sql } from "drizzle-orm";
-import { Users } from "lucide-react";
 
 export default async function AdminUsersPage() {
   await requireAdmin();
@@ -47,14 +44,14 @@ export default async function AdminUsersPage() {
       KYCVerification.status
     )
     .orderBy(sql`${user.createdAt} DESC`);
-  console.log(users);
+
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold mb-1">Users Overview</h1>
-      <div className="bg-white shadow p-5 rounded-md">
+      <div className="bg-white shadow p-5 rounded-md dark:bg-black">
         <DataTable
           columns={userColumns}
-          data={users}
+          data={users as User[]}
           placeholder="Search by name,role or email...."
           searchColumns={["email", "name", "role"]}
         />

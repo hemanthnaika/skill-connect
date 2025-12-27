@@ -17,14 +17,7 @@ import {
 
 export const description = "A simple area chart";
 
-const revenueData = [
-  { month: "Jan", revenue: 12000 },
-  { month: "Feb", revenue: 14500 },
-  { month: "Mar", revenue: 18000 },
-  { month: "Apr", revenue: 16000 },
-  { month: "May", revenue: 22000 },
-  { month: "Jun", revenue: 25000 },
-];
+
 
 const chartConfig = {
   Revenue: {
@@ -33,9 +26,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const ChartArea = () => {
+const ChartArea = ({ data }: { data: RevenueDatum[] }) => {
   return (
-    <Card className="border-secondary shadow-md">
+    <Card className="border-secondary shadow-md bg-white dark:bg-black">
       <CardHeader>
         <CardTitle>Revenue Overview</CardTitle>
       </CardHeader>
@@ -43,7 +36,7 @@ const ChartArea = () => {
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
           <AreaChart
             accessibilityLayer
-            data={revenueData}
+            data={data}
             margin={{
               left: 12,
               right: 12,

@@ -25,7 +25,7 @@ const WorkShops = async () => {
           Total Workshops: {workshops.length}
         </Badge>
       </div>
-      <div className="bg-white shadow-md  p-5 rounded-md">
+      <div className="bg-white shadow-md  p-5 rounded-md dark:bg-black">
         <DataTable
           data={workshops }
           placeholder="Search by title or creator name..."

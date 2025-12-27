@@ -83,32 +83,14 @@ const data = {
       url: "/admin/kycVerification",
       icon: Verified,
     },
-    {
-      name: "Categories",
-      url: "#",
-      icon: Group,
-    },
-    {
-      name: "Complaints",
-      url: "#",
-      icon: ShieldAlert,
-    },
-    {
-      name: "Analytics",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Settings",
-      url: "#",
-      icon: Settings,
-    },
+    
+   
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="bg-white">
       <SidebarHeader>
         <Link href={"/admin"}>
           <TeamSwitcher />
