@@ -101,7 +101,7 @@ export const courseStatusEnum = pgEnum("course_status", [
 
 export const workshops = pgTable("workshops", {
   id: uuid("id").defaultRandom().primaryKey(),
-  slug: varchar("slug", { length: 300 }),
+  slug: varchar("slug", { length: 300 }).notNull().unique(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   createdBy: text("created_by")
@@ -113,7 +113,7 @@ export const workshops = pgTable("workshops", {
   date: varchar("date", { length: 40 }).notNull(),
   time: varchar("time", { length: 40 }).notNull(),
   duration: varchar("duration", { length: 40 }).notNull(),
-  price: varchar("price", { length: 40 }).notNull(),
+  price: integer("price").notNull(),
   mode: workshopModeEnum("mode").notNull(),
   address: text("address"), // nullable
   thumbnailUrl: text("thumbnail_url").notNull(),

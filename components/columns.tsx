@@ -37,28 +37,11 @@ export function SortableHeader<TData, TValue>({
   );
 }
 
-export type Creator = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  image: string | null;
-};
 
-export type PendingWorkshopWithCreator = {
-  workshop: Workshop;
-  creator: Creator;
-};
 
-export type WorkshopTableRow = Workshop & {
-  createdByName: string | null;
-  createdByEmail: string | null;
-  createdByRole: string | null;
-  createdByImage: string | null;
-};
-
-export const columns: ColumnDef<WorkshopTableRow>[] = [
+export const columns: ColumnDef<PendingWorkshop>[] = [
   {
+    accessorFn: (row) => row.workshop.id,
     accessorKey: "id",
     header: () => <div className="text-right">#</div>,
     cell: ({ row }) => {
@@ -66,28 +49,33 @@ export const columns: ColumnDef<WorkshopTableRow>[] = [
     },
   },
   {
-    accessorKey: "title",
+    accessorFn: (row) => row.workshop.title,
     header: "Title",
+    accessorKey:"title",
   },
   {
-    accessorKey: "category",
+    accessorFn: (row) => row.workshop.category,
     header: "Category",
   },
   {
-    accessorKey: "level",
+    accessorFn: (row) => row.workshop.level,
     header: "Level",
   },
   {
-    accessorKey: "language",
+    accessorFn: (row) => row.workshop.language,
+  
     header: "Language",
   },
   {
+    accessorFn: (row) => row.workshop.price,
+
     accessorKey: "price",
     header: ({ column }) => <SortableHeader column={column} title="Price" />,
   },
 
   {
-    accessorKey: "createdByName",
+    accessorFn: (row) => row.creator?.name,
+    accessorKey: "name",
     header: "Creator",
     cell: ({ row }) => {
       return (
@@ -95,31 +83,38 @@ export const columns: ColumnDef<WorkshopTableRow>[] = [
           <Avatar>
             <AvatarImage
               src={
-                row.original.createdByImage
-                  ? row.original.createdByImage
+                row.original.creator?.image
+                  ? row.original.creator?.image
                   : profile.src
               }
             />
 
             <AvatarFallback>
-              {row.original.createdByName?.slice(0, 2)}
+              {row.original.creator?.name.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col text-xs">
-            <span>{row.original.createdByName}</span>
-            <span>{row.original.createdByRole}</span>
-            <span>{row.original.createdByEmail}</span>
+            <span>{row.original?.creator?.name}</span>
+            <span>{row.original?.creator?.role}</span>
+            <span>{row.original?.creator?.email}</span>
           </div>
         </div>
       );
     },
   },
   {
+    accessorFn: (row) => row.workshop.status,
+
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const workshop = row.original;
-      return <ActionButton id={workshop.id} status={workshop.status} />;
+      return (
+        <ActionButton
+          id={workshop.workshop.id}
+          status={workshop.workshop.status}
+        />
+      );
     },
   },
   {
@@ -134,8 +129,10 @@ export const columns: ColumnDef<WorkshopTableRow>[] = [
           </DialogTrigger>
           <DialogContent className="bg-white dark:bg-black max-w-3xl rounded-xl ">
             <DialogHeader className="dark:text-white">
-              <DialogTitle>{workshop.title}</DialogTitle>
-              <DialogDescription>{workshop.description}</DialogDescription>
+              <DialogTitle>{workshop.workshop.title}</DialogTitle>
+              <DialogDescription>
+                {workshop.workshop.description}
+              </DialogDescription>
               <div>
                 <Image
                   src={about}
@@ -144,10 +141,14 @@ export const columns: ColumnDef<WorkshopTableRow>[] = [
                   className="w-full rounded-md"
                 />
 
-                <div>{workshop.address && <span>{workshop.address}</span>}</div>
-                <div>Mode:-{workshop.mode}</div>
-                <div>Time:-{workshop.time}</div>
-                <div>Duration:-{workshop.duration}</div>
+                <div>
+                  {workshop.workshop.address && (
+                    <span>{workshop.workshop.address}</span>
+                  )}
+                </div>
+                <div>Mode:-{workshop.workshop.mode}</div>
+                <div>Time:-{workshop.workshop.time}</div>
+                <div>Duration:-{workshop.workshop.duration}</div>
               </div>
             </DialogHeader>
           </DialogContent>
@@ -156,18 +157,6 @@ export const columns: ColumnDef<WorkshopTableRow>[] = [
     },
   },
 ];
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "user" | "admin";
-  createdAt: Date;
-  image: string | null;
-  conductedCount: number;
-  registeredCount: number;
-  kycStatus: "pending" | "approved" | "rejected" | null;
-}
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -178,7 +167,7 @@ export const userColumns: ColumnDef<User>[] = [
       return (
         <Avatar>
           <AvatarImage src={user.image ? user.image : profile.src} />
-          <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
+          <AvatarFallback>{user.name?.slice(0, 2)}</AvatarFallback>
         </Avatar>
       );
     },
@@ -255,89 +244,91 @@ export const userColumns: ColumnDef<User>[] = [
   },
 ];
 
-export const allApprovedWorkshopColumns: ColumnDef<Workshop>[] = [
-  {
-    accessorKey: "#",
-    header: "#",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <Avatar>
-          <AvatarImage src={row.original.creatorImage || profile.src} />
-          <AvatarFallback>
-            {row.original.creatorName.slice(0, 2)}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-1 text-sm">
-          <span>{row.original.creatorName}</span>
-          <span>{row.original.createEmail}</span>
+export const allApprovedWorkshopColumns: ColumnDef<AdminAllWorkshopResponse>[] =
+  [
+    {      
+      accessorFn: row => row.creatorName,
+      accessorKey: "name",
+      header: "#",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarImage src={row.original.creatorImage || profile.src} />
+            <AvatarFallback>
+              {row.original.creatorName.slice(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-1 text-sm">
+            <span>{row.original.creatorName}</span>
+            <span>{row.original.createEmail}</span>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "title",
-    header: "Title",
-  },
-  {
-    accessorKey: "level",
-    header: "Level",
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => <SortableHeader column={column} title="Price" />,
-  },
-  {
-    accessorKey: "studentsCount",
-    header: ({ column }) => (
-      <SortableHeader column={column} title="Total Registrations" />
-    ),
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => <SortableHeader column={column} title="Date" />,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <ActionButton id={row.original.id} status={row.original.status} />
-    ),
-  },
-  {
-    accessorKey: "ViewDetails",
-    header: "More Info",
-    cell: ({ row }) => {
-      const workshop = row.original;
-      return (
-        <Dialog>
-          <DialogTrigger>
-            <ChevronRight className="w-5 h-5 " />
-          </DialogTrigger>
-          <DialogContent className="bg-white dark:bg-black max-w-3xl rounded-xl ">
-            <DialogHeader className="dark:text-white">
-              <DialogTitle>{workshop.title}</DialogTitle>
-              <DialogDescription>{workshop.description}</DialogDescription>
-              <div>
-                <Image
-                  src={about}
-                  alt="Thumbnail"
-                  height={300}
-                  className="w-full rounded-md"
-                />
-
-                <div>
-                  {workshop.address && (
-                    <span>Address:- {workshop.address}</span>
-                  )}
-                </div>
-                <div>Mode:-{workshop.mode}</div>
-                <div>Time:-{workshop.time}</div>
-                <div>Duration:-{workshop.duration}</div>
-              </div>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      );
+      ),
     },
-  },
-];
+    {
+      accessorKey: "title",
+      header: "Title",
+    },
+    {
+      accessorKey: "level",
+      header: "Level",
+    },
+    {
+      accessorKey: "price",
+      header: ({ column }) => <SortableHeader column={column} title="Price" />,
+    },
+    {
+      accessorKey: "studentsCount",
+      header: ({ column }) => (
+        <SortableHeader column={column} title="Total Registrations" />
+      ),
+    },
+    {
+      accessorKey: "date",
+      header: ({ column }) => <SortableHeader column={column} title="Date" />,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => (
+        <ActionButton id={row.original.id} status={row.original.status} />
+      ),
+    },
+    {
+      accessorKey: "ViewDetails",
+      header: "More Info",
+      cell: ({ row }) => {
+        const workshop = row.original;
+        return (
+          <Dialog>
+            <DialogTrigger>
+              <ChevronRight className="w-5 h-5 " />
+            </DialogTrigger>
+            <DialogContent className="bg-white dark:bg-black max-w-3xl rounded-xl ">
+              <DialogHeader className="dark:text-white">
+                <DialogTitle>{workshop.title}</DialogTitle>
+                <DialogDescription>{workshop.description}</DialogDescription>
+                <div>
+                  <Image
+                    src={about}
+                    alt="Thumbnail"
+                    height={300}
+                    className="w-full rounded-md"
+                  />
+
+                  <div>
+                    {workshop.address && (
+                      <span>Address:- {workshop.address}</span>
+                    )}
+                  </div>
+                  <div>Mode:-{workshop.mode}</div>
+                  <div>Time:-{workshop.time}</div>
+                  <div>Duration:-{workshop.duration}</div>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        );
+      },
+    },
+  ];

@@ -14,17 +14,11 @@ interface Workshop {
   duration: string;
   price: number;
   mode: "online" | "offline" | "both";
-  address?: string | null;
+  address: string | null;
   language: string;
   studentsCount: number;
   thumbnailUrl: string;
-  status: "pending" | "approved" | "rejected";
-  createdAt: string;
-  rejectionReason: string | null;
-  creatorName: string;
-  creatorImage: string;
-  createdBy?: string;
-  createEmail: string;
+  studentsCount: number;
 }
 
 interface WorkshopResponse {
@@ -77,19 +71,109 @@ interface User {
   id: string;
   name: string;
   email: string;
+  role: "user" | "admin";
+  createdAt: Date;
+  image: string | null;
+  conductedCount: number;
+  registeredCount: number;
+  kycStatus: "pending" | "approved" | "rejected" | null;
 }
 
 interface KYCUpdateResponse {
   message: string;
 }
 
-interface WorkshopCreator {
+interface PendingWorkshop {
+  workshop: {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    createdBy: string;
+    category: string;
+    language: string;
+    level: string;
+    date: string;
+    time: string;
+    duration: string;
+    price: number;
+    mode: "online" | "offline" | "both";
+    address: string | null;
+    thumbnailUrl: string;
+    status: "pending" | "approved" | "rejected";
+    rejectionReason: string | null;
+    createdAt: Date;
+  };
+  creator: {
+    id: string;
+    name: string;
+    email: string;
+    role: "user" | "admin";
+    image: string;
+  } | null;
+}
+
+interface AdminWorkshop extends Workshop {
+  createdBy: string;
+  thumbnailUrl: string;
+  status: "pending" | "approved" | "rejected";
+  rejectionReason: string | null;
+  createdAt: Date;
+}
+
+interface AdminAllWorkshopResponse {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  level: string;
+  date: string;
+  time: string;
+  duration: string;
+  price: number;
+  mode: "online" | "offline" | "both";
+  address: string | null;
+  language: string;
+  studentsCount: number;
+  thumbnailUrl: string;
+  studentsCount: number;
+  status: "pending" | "approved" | "rejected";
+  creatorName: string;
+  creatorImage: string;
+  createEmail: string;
+}
+
+interface RegisterUserResponse {
+  registrationId: string;
+  paymentStatus: string;
+  amountPaid: number;
+  registeredAt: string;
+  user: User;
+  workshop: Workshop;
+}
+
+interface Workshop {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  language: string;
+  level: string;
+  date: string;
+  time: string;
+  duration: string;
+  price: number;
+  mode: string;
+  thumbnailUrl: string;
+  status: string;
+}
+
+interface User {
   id: string;
   name: string;
   email: string;
+  image: string;
+  role: string;
 }
 
-interface PendingWorkshop {
-  workshop: Workshop;
-  user: WorkshopCreator | null; // leftJoin → can be null
-}

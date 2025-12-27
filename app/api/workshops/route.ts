@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     const title = form.get("title") as string;
     const baseSlug = createSlug(title);
     const slug = await ensureUniqueSlug(baseSlug);
-
+    const price = Number(form.get("price"));
     // Prepare workshop data
     const data = {
       slug, // slug as primary key
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
       date: form.get("date") as string,
       time: form.get("time") as string,
       duration: form.get("duration") as string,
-      price: form.get("price") as string,
+      price,
       mode: form.get("mode") as "online" | "offline" | "both",
       address: (form.get("address") as string) || null,
       thumbnailUrl: upload.secure_url,

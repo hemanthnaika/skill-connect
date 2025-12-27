@@ -70,17 +70,10 @@ const data = {
       icon: Banknote,
       items: [
         {
-          title: " Transactions",
-          url: "#",
+          title: "Registrations",
+          url: "/admin/registrations",
         },
-        {
-          title: "Payouts",
-          url: "#",
-        },
-        {
-          title: "Refunds",
-          url: "#",
-        },
+       
       ],
     },
   ],

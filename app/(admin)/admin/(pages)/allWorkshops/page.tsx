@@ -14,7 +14,7 @@ const WorkShops = async () => {
   });
 
   const data = await res.json();
-  const workshops: Workshop[] = data.workshops;
+  const workshops: AdminAllWorkshopResponse[] = data.workshops;
 
   return (
     <div>
@@ -27,10 +27,10 @@ const WorkShops = async () => {
       </div>
       <div className="bg-white shadow-md  p-5 rounded-md">
         <DataTable
-          data={workshops}
-          placeholder="Search by title"
+          data={workshops }
+          placeholder="Search by title or creator name..."
           columns={allApprovedWorkshopColumns}
-          searchColumns={["title"]}
+          searchColumns={["title","name"]}
         />
       </div>
     </div>
