@@ -45,7 +45,7 @@ const Registrations = async () => {
 
   return (
     <div className="space-y-2">
-      <h1 className="text-2xl font-semibold">Pending Workshop Approvals</h1>
+      <h1 className="text-2xl font-semibold">Registrations List</h1>
 
       {/* TABLE */}
       <div className="bg-white rounded-md shadow-md px-4 dark:bg-black space-y-5">
