@@ -25,7 +25,7 @@ export default function UserLayout({
 }) {
   return (
     <html lang="en" className={roboto.className}>
-      <body className="relative ">
+      <body >
         <Toaster position="top-center" reverseOrder={false} />
         <Navbar />
         {children}

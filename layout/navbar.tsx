@@ -115,7 +115,12 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/login">Login</Link>
+              <Link
+                href="/login"
+                className="bg-primary text-white px-5 py-2 rounded-full"
+              >
+                Login
+              </Link>
             )}
 
             <Sheet>

@@ -13,22 +13,24 @@ const SignUp = async () => {
     redirect("/profile");
   }
   return (
-    <CustomLayout>
-      <div className="flex h-[500px] w-full my-10">
-        {/* Left Banner Image */}
-        <div className="w-full hidden md:inline-block ">
-          <Image
-            className="h-full w-full  rounded-xl"
-            src="https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg"
-            width={500}
-            height={500}
-            alt="SkillConnect SignUp Banner"
-          />
-        </div>
+    <section className="pt-12">
+      <CustomLayout>
+        <div className="flex h-[500px] w-full my-10">
+          {/* Left Banner Image */}
+          <div className="w-full hidden md:inline-block ">
+            <Image
+              className="h-full w-full  rounded-xl"
+              src="https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg"
+              width={500}
+              height={500}
+              alt="SkillConnect SignUp Banner"
+            />
+          </div>
 
-        <SignUpForm />
-      </div>
-    </CustomLayout>
+          <SignUpForm />
+        </div>
+      </CustomLayout>
+    </section>
   );
 };
 

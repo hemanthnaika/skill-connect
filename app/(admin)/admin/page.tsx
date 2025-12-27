@@ -6,7 +6,7 @@ import RecentUser from "@/components/Admin/user-table";
 import { requireAdmin } from "@/lib/rbac";
 
 import { Banknote, Book, Users, Verified } from "lucide-react";
-import Link from "next/link";
+
 
 const Dashboard = async () => {
   await requireAdmin();

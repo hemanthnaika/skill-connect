@@ -7,12 +7,14 @@ import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { StepFormData } from "@/types/fromType";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { formStep, FormStepData } from "@/constants";
 import { DynamicFormField } from "./DynamicFormField";
 import { cn } from "@/lib/utils";
 import { Form } from "../ui/form";
+import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 const StepInfo = ({
   title,
@@ -50,6 +52,8 @@ const StepInfo = ({
 };
 
 const InstructorRegisterForm = () => {
+  const params = useSearchParams();
+
   const {
     currentStep,
     goToPreviousStep,
@@ -92,6 +96,11 @@ const InstructorRegisterForm = () => {
       goToNextStep();
     }
   };
+  useEffect(() => {
+    if (params.get("reason") === "required") {
+      toast.error("Please complete your KYC to create a workshop!");
+    }
+  }, []);
   return (
     <section className="flex flex-col gap-5">
       <div className="flex items-center gap-5">
