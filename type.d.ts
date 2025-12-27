@@ -148,9 +148,17 @@ interface RegisterUserResponse {
   registrationId: string;
   paymentStatus: string;
   amountPaid: number;
-  registeredAt: string;
-  user: User;
+  registeredAt: Date;
+  user: RegistrationUser;
   workshop: Workshop;
+}
+
+interface RegistrationUser {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  role: "user" | "admin";
 }
 
 interface Workshop {
@@ -168,12 +176,3 @@ interface Workshop {
   thumbnailUrl: string;
   status: string;
 }
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  role: string;
-}
-

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 
 interface SortableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
@@ -37,8 +38,6 @@ export function SortableHeader<TData, TValue>({
   );
 }
 
-
-
 export const columns: ColumnDef<PendingWorkshop>[] = [
   {
     accessorFn: (row) => row.workshop.id,
@@ -51,7 +50,7 @@ export const columns: ColumnDef<PendingWorkshop>[] = [
   {
     accessorFn: (row) => row.workshop.title,
     header: "Title",
-    accessorKey:"title",
+    accessorKey: "title",
   },
   {
     accessorFn: (row) => row.workshop.category,
@@ -63,7 +62,7 @@ export const columns: ColumnDef<PendingWorkshop>[] = [
   },
   {
     accessorFn: (row) => row.workshop.language,
-  
+
     header: "Language",
   },
   {
@@ -246,8 +245,8 @@ export const userColumns: ColumnDef<User>[] = [
 
 export const allApprovedWorkshopColumns: ColumnDef<AdminAllWorkshopResponse>[] =
   [
-    {      
-      accessorFn: row => row.creatorName,
+    {
+      accessorFn: (row) => row.creatorName,
       accessorKey: "name",
       header: "#",
       cell: ({ row }) => (
@@ -332,3 +331,63 @@ export const allApprovedWorkshopColumns: ColumnDef<AdminAllWorkshopResponse>[] =
       },
     },
   ];
+
+export const registrationsColumns: ColumnDef<RegisterUserResponse>[] = [
+  {
+    accessorFn: (row) => row.user.name,
+    accessorKey: "name",
+    header: "#",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <div className="flex gap-2 items-center">
+          <Avatar>
+            <AvatarImage
+              src={user.user.image ? user.user.image : profile.src}
+            />
+            <AvatarFallback>{user.user.name?.slice(0, 2)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-0.5 text-xs">
+            <span>{user.user.name}</span>
+            <span>{user.user.email}</span>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorFn: (row) => row.workshop.title,
+    accessorKey: "title",
+    header: "Title",
+  },
+  {
+    accessorFn: (row) => row.workshop.price,
+    accessorKey: "price",
+    header: ({ column }) => <SortableHeader column={column} title="Price" />,
+  },
+  {
+    accessorFn: (row) => row.registeredAt,
+
+    accessorKey: "registeredAt",
+    header: ({ column }) => (
+      <SortableHeader column={column} title="Registered At" />
+    ),
+    cell: ({ row }) => (
+      <div>{new Date(row.original.registeredAt).toDateString()}</div>
+    ),
+  },
+  {
+    accessorFn: (row) => row.paymentStatus,
+    accessorKey: "paymentStatus",
+    header: "Payment Status",
+    cell: ({ row }) => (
+      <div>
+        {row.original.paymentStatus ? (
+          <Badge className="text-xs bg-green-600  text-white px-5">Paid</Badge>
+        ) : (
+          <Badge className="text-xs bg-red-500  text-white px-5">Unpaid</Badge>
+        )}
+      </div>
+    ),
+  },
+];
