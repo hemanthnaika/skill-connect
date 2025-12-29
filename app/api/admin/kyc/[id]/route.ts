@@ -5,13 +5,13 @@ import { eq } from "drizzle-orm";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
-
+    const { id } = await context.params;
     const kyc = await db.query.KYCVerification.findFirst({
-      where: eq(KYCVerification.id, params.id),
+      where: eq(KYCVerification.id, id),
       with: { user: true },
     });
 
@@ -21,7 +21,7 @@ export async function GET(
 
     return Response.json(kyc);
   } catch (error) {
-    console.log(error);
+ 
     const err = error instanceof Error ? error : new Error("Unknown error");
     return Response.json({ err: err.message }, { status: 500 });
   }

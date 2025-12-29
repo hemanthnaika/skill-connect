@@ -39,7 +39,7 @@ export function useMultiStepForm() {
   const submitForm = async (
     data: StepFormData & { document?: File; selfie?: File }
   ) => {
-    console.log("Final Data", data);
+
     setIsSubmitted(true);
 
     try {

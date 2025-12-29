@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import { SignOutAction } from "@/server/users";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -108,7 +109,10 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Button className="bg-red-500 w-full text-white">
+                    <Button
+                      className="bg-red-500 w-full text-white hover:bg-red-600"
+                      onClick={() => SignOutAction()}
+                    >
                       Logout
                     </Button>
                   </DropdownMenuItem>

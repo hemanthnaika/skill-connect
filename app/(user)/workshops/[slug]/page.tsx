@@ -44,7 +44,7 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
     headers: await headers(),
   });
 
-  console.log(workshop);
+
   return (
     <section>
       <div className="bg-secondary py-5">

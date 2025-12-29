@@ -74,7 +74,7 @@ const KYCTable = () => {
           rejectionReason: action === "rejected" ? rejectionReason : null,
         },
       });
-      console.log(res);
+     
       if (!res) return;
       if (res.message) {
         toast.success(res.message);

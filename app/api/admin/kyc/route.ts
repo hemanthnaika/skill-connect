@@ -20,7 +20,6 @@ export async function GET(_req: Request) {
 
     return NextResponse.json({ KYC }, { status: 200 });
   } catch (error) {
-    console.log(error);
     const err = error instanceof Error ? error : new Error("Unknown error");
     return NextResponse.json({ err: err.message }, { status: 500 });
   }

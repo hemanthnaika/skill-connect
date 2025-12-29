@@ -14,7 +14,7 @@ const InstructorRegister = async () => {
   if (kycStatus?.status === "approved") {
     redirect("/workshops/conductWorkshop");
   }
-  console.log(kycStatus);
+
 
   return (
     <section className="pt-12">

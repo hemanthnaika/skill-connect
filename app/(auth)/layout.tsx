@@ -5,18 +5,6 @@ import "../globals.css";
 import Navbar from "@/layout/navbar";
 import Footer from "@/layout/footer";
 import { Toaster } from "react-hot-toast";
-const roboto = Bricolage_Grotesque({
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Skill Connect",
-  description:
-    "A community platform where people teach, learn, and join online/offline workshops — all in one place.",
-  icons: {
-    icon: "/logo.png",
-  },
-};
 
 export default function UserLayout({
   children,
@@ -24,13 +12,11 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.className}>
-      <body >
-        <Toaster position="top-center" reverseOrder={false} />
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Navbar />
+      {children}
+      <Footer />
+    </>
   );
 }

@@ -6,7 +6,16 @@ import { NextRequest, NextResponse } from "next/server";
  * Public routes that do NOT require authentication
  * Everything else is protected by default
  */
-const PUBLIC_ROUTES = ["/api/auth", "/signIn", "/signUp"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/api/auth",
+  "/signIn",
+  "/signUp",
+  "/about",
+  "/contact",
+  "/workshops",
+  "/workshops/[slug]",
+];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

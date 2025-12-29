@@ -6,12 +6,12 @@ import { db } from "@/db/drizzle";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
 
-    const { id } = params;
+    const { id } = await context.params;
     const body = await req.json();
 
     const { status, rejectionReason } = body;

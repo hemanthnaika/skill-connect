@@ -21,7 +21,6 @@ const Profile = async () => {
   const res = await serverFetch<ProfileResponse>({
     url: `users/${session.user?.id}/profile`,
   });
-  console.log(res.conductedWorkshops);
 
   return (
     <section className="pt-20">
@@ -74,7 +73,7 @@ const Profile = async () => {
             </h2>
 
             {/* Registered Card */}
-          
+
             <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mt-5">
               {res.joinedWorkshops.map((workshop, i) => (
                 <CourseCard key={i} workshop={workshop} />
