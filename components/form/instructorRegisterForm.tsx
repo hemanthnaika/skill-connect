@@ -102,8 +102,8 @@ const InstructorRegisterForm = () => {
     }
   }, []);
   return (
-    <section className="flex flex-col gap-5">
-      <div className="flex items-center gap-5">
+    <section className="flex flex-col gap-5 ">
+      <div className="flex items-center gap-5 flex-wrap md:flex-nowrap">
         {formStep.map((step, i) => (
           <StepInfo
             i={i}
@@ -118,7 +118,7 @@ const InstructorRegisterForm = () => {
       </div>
       <div>
         <Form {...form}>
-          <form className="grid grid-cols-2 gap-4 mt-5">
+          <form className="grid  md:grid-cols-2 gap-4 mt-5">
             {FormStepData[currentStep].fields.map((field) => (
               <DynamicFormField key={field.name} form={form} item={field} />
             ))}

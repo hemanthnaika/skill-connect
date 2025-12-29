@@ -25,7 +25,7 @@ const PaymentSuccess = () => {
         <p className="mb-8 text-xl text-gray-700">
           Thank you for your Register.
         </p>
-     
+
         {/* Contact Information */}
         <div className="pt-8 mt-8 border-t border-gray-100">
           <p className="text-lg text-gray-700">
@@ -41,7 +41,7 @@ const PaymentSuccess = () => {
         {/* Back to Home Button */}
         <div className="mt-12">
           <a
-            href="http://127.0.0.1:8000"
+            href="/profile"
             className="inline-block px-8 py-4 text-lg font-semibold text-white transition-colors duration-200 bg-green-600 rounded-lg hover:bg-green-700"
           >
             Return to Dashboard

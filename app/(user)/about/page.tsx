@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const About = () => {
   return (
-    <section className="py-10">
+    <section className="pt-16">
       <CustomLayout>
         {/* Hero Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">

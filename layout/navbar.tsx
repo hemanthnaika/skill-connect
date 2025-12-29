@@ -107,7 +107,7 @@ const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+
                   <DropdownMenuItem>
                     <Button
                       className="bg-red-500 w-full text-white hover:bg-red-600"

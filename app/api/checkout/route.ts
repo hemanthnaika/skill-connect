@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         workshopId,
       },
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/workshops/${slug}?payment=success&user=${userId}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/workshops/${slug}?payment=cancel`,
     });
     revalidateTag("admin-dashboard", {});
