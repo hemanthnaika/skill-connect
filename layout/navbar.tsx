@@ -120,7 +120,7 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <Link
-                href="/login"
+                href="/signIn"
                 className="bg-primary text-white px-5 py-2 rounded-full"
               >
                 Login

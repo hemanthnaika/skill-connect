@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
       "images.unsplash.com",
       "source.unsplash.com",
       "source.unsplash.com",
-      "images.pexels.com"
+      "images.pexels.com",
+      "mages.remotePattern"
     ],
   },
 };
