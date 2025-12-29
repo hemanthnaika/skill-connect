@@ -3,22 +3,25 @@ import {
   Card,
   CardAction,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LucideIcon, Upload } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 const CardSection = ({
   title,
   total,
   icon: Icon,
+  link
 }: {
   title: string;
   total: number;
   icon: LucideIcon;
+  link:string
 }) => {
   return (
+    <Link href={link}>
     <Card className="@container/card border-secondary shadow-md bg-white dark:bg-black ">
       <CardHeader>
         <CardDescription>{title}</CardDescription>
@@ -35,6 +38,7 @@ const CardSection = ({
         </CardAction>
       </CardHeader>
     </Card>
+    </Link>
   );
 };
 

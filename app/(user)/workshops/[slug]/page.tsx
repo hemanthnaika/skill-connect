@@ -44,6 +44,7 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
     headers: await headers(),
   });
 
+  console.log(workshop);
   return (
     <section>
       <div className="bg-secondary py-5">
@@ -73,16 +74,16 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
               {/* Instructor */}
               <div className="flex gap-2 mt-5">
                 <Image
-                  src={profile}
+                  src={workshop.creator.image || profile}
                   alt="profile image"
                   width={50}
                   height={50}
                   className="rounded-full"
                 />
                 <div>
-                  {/* <h2 className="font-bold">{workshop.instructor}</h2> */}
+                  <h2 className="font-bold">{workshop.creator.name}</h2>
                   <span className="text-slate-500 text-sm font-medium">
-                    {/* {workshop.role} */}
+                    {workshop.creator.email}
                   </span>
                 </div>
               </div>
@@ -91,7 +92,7 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
               <div className="flex  items-center justify-between bg-white px-5 py-3 rounded-lg mt-5">
                 <Info
                   icon={<Star className="text-yellow-500 w-5 h-5" />}
-                  info={10}
+                  info={workshop.rating}
                 />
                 <Info
                   icon={<GraduationCap className="text-black w-5 h-5" />}
@@ -164,13 +165,13 @@ const Details = async ({ params }: { params: Promise<{ slug: string }> }) => {
             </div>
 
             {/* Right Image */}
-            <div className="w-full flex h-1/2">
+            <div className="relative w-full aspect-4/3 md:aspect-video">
               <Image
                 src={workshop.thumbnailUrl}
                 alt="Workshop Image"
-                width={500}
-                height={500}
-                className="rounded-xl w-full h-full object-cover"
+                fill
+                priority
+                className="rounded-xl object-cover"
               />
             </div>
           </div>

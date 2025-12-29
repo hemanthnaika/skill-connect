@@ -1,3 +1,4 @@
+import { logo } from "@/assets/images";
 import { Earth, Star, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +11,6 @@ const CourseCard = ({ workshop }: CourseCardProps) => {
 
   const instructorRating = 4.8;
   const instructorReviews = 112;
-  const isUpcoming = true;
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-8 bg-white shadow p-5 rounded-md">
@@ -20,16 +20,9 @@ const CourseCard = ({ workshop }: CourseCardProps) => {
           width={500}
           height={500}
           className="rounded-xl w-full h-52 object-cover"
-          src={workshop.thumbnailUrl}
+          src={workshop.thumbnailUrl || logo}
           alt={title}
         />
-
-        {/* NEW Badge */}
-        {isUpcoming && (
-          <span className="absolute top-2 left-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded-md">
-            NEW
-          </span>
-        )}
 
         {/* Category + Rating */}
         <div className="flex items-center mt-2 justify-between">

@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -10,19 +9,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-import z from "zod";
-import { useForm, UseFormRegister } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useRef, useEffect } from "react";
-import toast from "react-hot-toast";
-import { Loader } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useApi } from "@/hooks/useApi";
 import CustomLayout from "@/components/CustomLayout";
+import { Button } from "@/components/ui/button";
+import { useApi } from "@/hooks/useApi";
+import { authClient } from "@/lib/auth-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useForm, UseFormRegister } from "react-hook-form";
+import toast from "react-hot-toast";
+import z from "zod";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_TYPES = [

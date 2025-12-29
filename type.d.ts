@@ -20,6 +20,16 @@ interface Workshop {
   thumbnailUrl: string;
   studentsCount: number;
   rating: number;
+  rejectionReason?: string;
+  creator: Creator;
+  rating: number;
+}
+
+interface Creator {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
 }
 
 interface WorkshopResponse {
@@ -44,7 +54,7 @@ interface User {
   id: string;
   role: string;
   image?: string;
-  name?: string;
+  email: string;
 }
 
 interface KYCResponse {

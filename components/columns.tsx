@@ -2,10 +2,10 @@
 
 import { Column, ColumnDef } from "@tanstack/react-table";
 
+import { profile } from "@/assets/images";
 import { ArrowUpDown, ChevronRight, User, UserStar } from "lucide-react";
-import ActionButton from "./actionButton";
 import Image from "next/image";
-import { about, profile } from "@/assets/images";
+import ActionButton from "./actionButton";
 
 import {
   Dialog,
@@ -16,8 +16,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 interface SortableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
@@ -134,9 +134,10 @@ export const columns: ColumnDef<PendingWorkshop>[] = [
               </DialogDescription>
               <div>
                 <Image
-                  src={about}
+                  src={workshop.workshop.thumbnailUrl}
                   alt="Thumbnail"
                   height={300}
+                  width={300}
                   className="w-full rounded-md"
                 />
 
@@ -309,9 +310,10 @@ export const allApprovedWorkshopColumns: ColumnDef<AdminAllWorkshopResponse>[] =
                 <DialogDescription>{workshop.description}</DialogDescription>
                 <div>
                   <Image
-                    src={about}
+                    src={workshop.thumbnailUrl}
                     alt="Thumbnail"
                     height={300}
+                    width={300}
                     className="w-full rounded-md"
                   />
 

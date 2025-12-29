@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { registrations, workshops } from "@/db/schema";
+import { registrations, user, workshops } from "@/db/schema";
 import cloudinary from "@/lib/cloudinary";
 import { and, eq, not, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -30,21 +30,30 @@ export async function GET(
         address: workshops.address,
         thumbnailUrl: workshops.thumbnailUrl,
         language: workshops.language,
+        rating:workshops.rating,
 
-        // ✅ paid students count
+        // 👤 creator info
+        creator: {
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        },
+
+        // 👥 paid students count
         studentsCount: sql<number>`
-        COUNT(
-          CASE
-            WHEN ${registrations.paymentStatus} = 'paid'
-            THEN 1
-          END
-        )
-      `.as("studentsCount"),
+      COUNT(
+        CASE
+          WHEN ${registrations.paymentStatus} = 'paid'
+          THEN 1
+        END
+      )
+    `.as("studentsCount"),
       })
       .from(workshops)
+      .leftJoin(user, eq(user.id, workshops.createdBy))
       .leftJoin(registrations, eq(registrations.workshopId, workshops.id))
       .where(eq(workshops.slug, slug))
-      .groupBy(workshops.id)
+      .groupBy(workshops.id, user.id)
       .limit(1);
 
     if (workshopResult.length === 0) {
@@ -114,7 +123,7 @@ export async function PUT(
       date: string;
       time: string;
       duration: string;
-      price: string;
+      price: number;
       mode: "online" | "offline" | "both";
       address: string | null;
       thumbnailUrl: string;
@@ -136,15 +145,22 @@ export async function PUT(
     ];
     fields.forEach((key) => {
       const value = form.get(key);
-      if (value !== null) {
-        if (key === "mode") {
-          const modeValue = value.toString() as "online" | "offline" | "both";
-          if (["online", "offline", "both"].includes(modeValue)) {
-            updateData.mode = modeValue;
-          }
-        } else {
-          updateData[key] = value.toString();
+      if (value === null) return;
+
+      if (key === "mode") {
+        const modeValue = value.toString() as "online" | "offline" | "both";
+        if (["online", "offline", "both"].includes(modeValue)) {
+          updateData.mode = modeValue;
         }
+      } else if (key === "price") {
+        const num = Number(value);
+        if (!isNaN(num)) {
+          updateData.price = num;
+        }
+      } else if (key === "address") {
+        updateData.address = value.toString() || null;
+      } else {
+        updateData[key] = value.toString();
       }
     });
 

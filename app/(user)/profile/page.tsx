@@ -74,7 +74,7 @@ const Profile = async () => {
             </h2>
 
             {/* Registered Card */}
-            <WorkshopButton />
+          
             <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mt-5">
               {res.joinedWorkshops.map((workshop, i) => (
                 <CourseCard key={i} workshop={workshop} />

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useApi } from "@/hooks/useApi";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -28,6 +29,7 @@ const WorkshopButton = ({
   isCreate = false,
   workshopId = "",
 }: WorkshopBtnProps) => {
+  const router = useRouter();
   const [meetingLink, setMeetingLink] = useState("");
   const { request, loading, error } = useApi<MeetingResponse>();
 
@@ -67,7 +69,7 @@ const WorkshopButton = ({
   const handleJoinMeeting = () => {
     if (!meetingLink) return;
     toast.success("Joining meeting...");
-    // router.push(meetingLink)
+    router.push(meetingLink);
   };
 
   return (

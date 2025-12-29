@@ -1,15 +1,5 @@
 "use client";
 
-import { useApi } from "@/hooks/useApi";
-import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Dialog,
   DialogClose,
@@ -19,17 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Ellipsis, Loader, MoreVertical } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import Link from "next/link";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useApi } from "@/hooks/useApi";
+import { Ellipsis, Loader } from "lucide-react";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Button } from "./ui/button";
 
 const TableColumns = ["ID", "User", "Status", "Actions"];
 
