@@ -13,7 +13,7 @@ const CourseCard = ({ workshop }: CourseCardProps) => {
   const isUpcoming = true;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-8">
+    <div className="flex flex-wrap items-center justify-center gap-8 bg-white shadow p-5 rounded-md">
       <div className="max-w-72 w-full hover:-translate-y-0.5 transition duration-300 relative">
         {/* Thumbnail */}
         <Image

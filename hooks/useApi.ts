@@ -42,13 +42,15 @@ export function useApi<TResponse>() {
           error.response?.data?.message ??
           error.message ??
           "Something went wrong";
-        toast.error(message);
+         
         setState({
           data: null,
           error: message,
           loading: false,
         });
-
+        if (message.length >0) {
+          toast.error(message);
+        }
         return null; // ✅ explicit, safe, predictable
       }
     },

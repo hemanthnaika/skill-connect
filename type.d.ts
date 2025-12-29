@@ -19,6 +19,7 @@ interface Workshop {
   studentsCount: number;
   thumbnailUrl: string;
   studentsCount: number;
+  rating: number;
 }
 
 interface WorkshopResponse {

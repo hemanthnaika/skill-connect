@@ -119,6 +119,7 @@ export const workshops = pgTable("workshops", {
   thumbnailUrl: text("thumbnail_url").notNull(),
   status: courseStatusEnum("status").default("pending").notNull(),
   rejectionReason: text("rejection_reason"),
+  rating: integer("rating").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

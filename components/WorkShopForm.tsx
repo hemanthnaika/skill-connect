@@ -41,7 +41,7 @@ const workshopSchema = z.object({
   date: z.string().min(1, "Select date"),
   time: z.string().min(1, "Select time"),
   duration: z.string().min(1, "Enter duration"),
-  price: z.string().min(1, "Enter price"),
+  price: z.number().min(1, "Enter price"),
   mode: z.enum(["online", "offline", "both"], {
     message: "Select workshop mode",
   }),
@@ -106,6 +106,7 @@ interface FiledSelectProps {
   options: OptionType[];
   onChange: (value: string) => void;
   error?: string;
+  value?: string;
 }
 
 const FiledSelect = ({
@@ -114,12 +115,13 @@ const FiledSelect = ({
   options,
   onChange,
   error,
+  value,
 }: FiledSelectProps) => (
   <div className="space-y-2 w-full ">
     <Label>{title}</Label>
     <Select onValueChange={onChange}>
       <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={value} />
       </SelectTrigger>
       <SelectContent className="bg-white shadow">
         {options.map((o) => (
@@ -143,13 +145,19 @@ const WorkShopForm = () => {
 
   const [preview, setPreview] = useState<string | null>(null);
   const [mode, setMode] = useState<string>("online");
+  const [cat, setCat] = useState<string>("");
+  const [level, setLevel] = useState<string>("");
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    toast.error(error);
+    if (error && error.length > 0) {
+      toast.error(error);
+    }
   }, [error]);
+
   const {
     register,
     handleSubmit,
@@ -179,9 +187,32 @@ const WorkShopForm = () => {
 
       const duration = parseFloat(res.workshop.duration);
       setValue("duration", duration.toString(), { shouldValidate: true });
-      if (res.workshop.thumbnailUrl) setPreview(res.workshop.thumbnailUrl);
-
-      if (res.workshop.mode) setMode(res.workshop.mode);
+      if (res.workshop.thumbnailUrl) {
+        setPreview(res.workshop.thumbnailUrl);
+      }
+      if (res.workshop.mode) {
+        setMode(res.workshop.mode);
+        setValue("mode", res.workshop.mode, { shouldValidate: true });
+      }
+      if (res.workshop.category) {
+        setCat(res.workshop.category);
+        setValue("category", res.workshop.category, { shouldValidate: true });
+      }
+      if (res.workshop.level) {
+        setLevel(res.workshop.level);
+        setValue("level", res.workshop.level, { shouldValidate: true });
+      }
+      if (res.workshop.time) {
+        setValue("time", res.workshop.time, { shouldValidate: true });
+      }
+      if (res.workshop.address === null) {
+        setValue("address", "", { shouldValidate: true });
+      }
+      if (res.workshop.time) {
+        const time = "10:00 AM";
+        const extracted = time.split(" ")[0];
+        setValue("time", extracted, { shouldValidate: true });
+      }
     };
     fetchSlug();
   }, [slug]);
@@ -270,18 +301,30 @@ const WorkShopForm = () => {
           </div>
 
           {/* GRID */}
-          <div className="grid grid-cols-6 gap-5">
+          <div className="grid  grid-cols-3 md:grid-cols-6 gap-5">
             {/* CATEGORY */}
             <FiledSelect
+              value={cat}
               title="Category"
               placeholder="Choose category"
               name="category"
               options={[
-                { label: "Art & Creativity", value: "art" },
-                { label: "Music", value: "music" },
-                { label: "Technology", value: "tech" },
-                { label: "Dance & Fitness", value: "dance" },
-                { label: "Career Development", value: "career" },
+                { label: "Art & Creativity", value: "Art & Creativity" },
+                { label: "Cooking & Lifestyle", value: "Cooking & Lifestyle" },
+                {
+                  label: "Writing & Communication",
+                  value: "Writing & Communication",
+                },
+                { label: "Languages", value: "Languages" },
+                { label: "Business & Money", value: "Business & Money" },
+                {
+                  label: "Personal Development",
+                  value: "Personal Development",
+                },
+                { label: "Music & Performance", value: "Music & Performance" },
+                { label: "Technology & Coding", value: "Technology & Coding" },
+                { label: "Professional Skills", value: "Professional Skills" },
+                { label: "Health & Fitness", value: "Health & Fitness" },
               ]}
               onChange={(v) =>
                 setValue("category", v, { shouldValidate: true })
@@ -301,10 +344,11 @@ const WorkShopForm = () => {
               title="Difficulty Level"
               placeholder="Select level"
               name="level"
+              value={level}
               options={[
-                { label: "Beginner", value: "beginner" },
-                { label: "Intermediate", value: "intermediate" },
-                { label: "Advanced", value: "advanced" },
+                { label: "Beginner", value: "Beginner" },
+                { label: "Intermediate", value: "Intermediate" },
+                { label: "Advanced", value: "Advanced" },
               ]}
               onChange={(v) => setValue("level", v, { shouldValidate: true })}
               error={errors.level?.message}
@@ -346,7 +390,7 @@ const WorkShopForm = () => {
               type="number"
               placeholder="Price"
               name="price"
-              register={register}
+              register={(name) => register(name, { valueAsNumber: true })}
               error={errors.price?.message}
             />
           </div>
@@ -356,6 +400,7 @@ const WorkShopForm = () => {
             title="Workshop Mode"
             placeholder="Choose mode"
             name="mode"
+            value={mode}
             options={[
               { label: "Online", value: "online" },
               { label: "Offline", value: "offline" },

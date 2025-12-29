@@ -174,14 +174,14 @@ const MeetingRoom = ({ call, role, chatClient, channel }: MeetingRoomProps) => {
   /* ---------------- Render ---------------- */
 
   return (
-    <div className="bg-[#1D2938] h-screen text-white px-4 md:px-10 pt-10">
+    <div className="bg-[#1D2938] h-screen     text-white px-4 md:px-10 pt-10">
       <div className="flex h-full gap-6">
         {/* Video */}
         <div className="flex-1 relative">
           {renderCallLayout()}
 
           {/* Controls */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 flex-wrap justify-center">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 flex-wrap md:flex-nowrap justify-center items-center">
             <CallControls onLeave={handleLeave} />
             <CallStatsButton />
 
@@ -199,7 +199,7 @@ const MeetingRoom = ({ call, role, chatClient, channel }: MeetingRoomProps) => {
               <DropdownMenuTrigger asChild className="hidden md:block">
                 <LayoutList className="cursor-pointer" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="bg-white">
                 <DropdownMenuLabel>Layout</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup
